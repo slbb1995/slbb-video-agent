@@ -4,44 +4,17 @@
 from __future__ import annotations
 
 import argparse
-import os
 import platform
 import shutil
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
-
-def package_root() -> Path:
-    return Path(__file__).resolve().parents[3]
-
-
-def venv_python(root: Path) -> Path:
-    if platform.system().lower().startswith("win"):
-        return root / ".venv" / "Scripts" / "python.exe"
-    return root / ".venv" / "bin" / "python"
+from video_env_lib import python_can_import, resolve_project_root, venv_python
 
 
 def has_non_ascii(text: str) -> bool:
     return any(ord(ch) > 127 for ch in text)
-
-
-def check_import(python_path: Path) -> tuple[bool, str]:
-    if not python_path.exists():
-        return False, f"python not found: {python_path}"
-    result = subprocess.run(
-        [str(python_path), "-c", "import faster_whisper; print('ok')"],
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False,
-        timeout=30,
-    )
-    if result.returncode == 0:
-        return True, "faster-whisper import ok"
-    detail = (result.stderr or result.stdout).strip().splitlines()
-    return False, detail[-1] if detail else "faster-whisper import failed"
 
 
 def check_artifacts_write(root: Path) -> tuple[bool, str]:
@@ -76,15 +49,16 @@ def print_install_hint(system_name: str, missing: list[str]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Check video workflow prerequisites")
-    parser.parse_args()
+    parser.add_argument("--project-root", help="slbb-video-agent project root or standalone skill root")
+    args = parser.parse_args()
 
-    root = package_root()
+    root = resolve_project_root(explicit_root=args.project_root)
     system_name = platform.system() or "unknown"
     required_missing: list[str] = []
     warnings: list[str] = []
 
     print("SLBB video environment doctor")
-    print(f"Package root: {root}")
+    print(f"Environment root: {root}")
     print(f"System: {system_name} {platform.release()}")
 
     python_ok = sys.version_info >= (3, 10)
@@ -107,7 +81,7 @@ def main() -> int:
     fw_ok = False
     fw_detail = "skipped because .venv is missing"
     if venv_ok:
-        fw_ok, fw_detail = check_import(venv_python(root))
+        fw_ok, fw_detail = python_can_import(venv_python(root), "faster_whisper")
     print(f"{'OK' if fw_ok else 'MISSING'} faster-whisper: {fw_detail}")
     if not fw_ok:
         required_missing.append("faster-whisper")

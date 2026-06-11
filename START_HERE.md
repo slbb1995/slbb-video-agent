@@ -72,6 +72,24 @@ Windows：
 
 安装完必须重新运行 `slbb-video-doctor`，通过后再继续。
 
+如果你不是在完整项目根目录，而是只安装了单独的 `slbb-video-orchestrator` skill，请在该 skill 目录里运行：
+
+macOS / Linux：
+
+```bash
+./bin/slbb-video-doctor
+./bin/slbb-video-setup --video
+```
+
+Windows：
+
+```powershell
+.\bin\slbb-video-doctor.cmd
+.\bin\slbb-video-setup.cmd --video
+```
+
+转写时会优先使用 `SLBB_VIDEO_PYTHON` 或 `SLBB_VIDEO_VENV_PYTHON` 指定的 Python；没有指定时，自动查当前项目或 skill 目录下的 `.venv`。
+
 ---
 
 ## 第 1 步：摸清包和入口

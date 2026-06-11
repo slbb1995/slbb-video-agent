@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import json
 import math
-import platform
 import shutil
 import subprocess
 import sys
@@ -15,6 +14,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from workflow_lib import load_state, save_state, utc_now
+from video_env_lib import resolve_project_root, resolve_python_with_module
 
 
 VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm", ".m4v", ".avi"}
@@ -28,16 +28,6 @@ PLATFORM_DOMAINS = {
     "bilibili.com",
     "b23.tv",
 }
-
-
-def package_root() -> Path:
-    return Path(__file__).resolve().parents[3]
-
-
-def venv_python(root: Path) -> Path:
-    if platform.system().lower().startswith("win"):
-        return root / ".venv" / "Scripts" / "python.exe"
-    return root / ".venv" / "bin" / "python"
 
 
 def is_url(value: str) -> bool:
@@ -126,10 +116,32 @@ def transcribe_audio(audio_path: Path, json_out: Path, txt_out: Path, model_name
     return 0
 
 
-def run_transcription(root: Path, audio_path: Path, json_out: Path, txt_out: Path, model_name: str) -> int:
-    py = venv_python(root)
-    if not py.exists():
-        py = Path(sys.executable)
+def run_transcription(
+    run_dir: Path,
+    audio_path: Path,
+    json_out: Path,
+    txt_out: Path,
+    model_name: str,
+    project_root: Path,
+    transcript_python: str | None,
+) -> int:
+    py, notes = resolve_python_with_module(
+        "faster_whisper",
+        run_dir=run_dir,
+        explicit_root=str(project_root),
+        explicit_python=transcript_python,
+    )
+    if not py:
+        print("ERROR: cannot find a Python environment that can import faster_whisper.")
+        print("Checked candidates:")
+        for note in notes:
+            print(f"- {note}")
+        print("\nFix:")
+        print("- From the slbb-video-agent project root, run `./bin/slbb-video-setup --video`.")
+        print("- Windows: run `.\\bin\\slbb-video-setup.cmd --video`.")
+        print("- If using a standalone skill copy, run `python scripts/setup_video_env.py --video --project-root <skill-or-project-root>`.")
+        print("- Or set SLBB_VIDEO_PYTHON to the Python executable inside the correct .venv.")
+        return 127
     cmd = [str(py), str(Path(__file__).resolve()), "_transcribe_audio", str(audio_path), str(json_out), str(txt_out), model_name]
     return subprocess.run(cmd, check=False).returncode
 
@@ -263,6 +275,8 @@ def main() -> int:
     parser.add_argument("--model", default="small", help="faster-whisper model name")
     parser.add_argument("--max-keyframes", type=int, default=120)
     parser.add_argument("--skip-transcript", action="store_true", help="Skip faster-whisper transcription")
+    parser.add_argument("--project-root", help="slbb-video-agent project root or standalone skill root")
+    parser.add_argument("--transcript-python", help="Python executable that can import faster_whisper")
     args = parser.parse_args()
 
     video = args.video
@@ -278,6 +292,7 @@ def main() -> int:
         video = str(local_video.resolve())
 
     run_dir = Path(args.run_dir).expanduser().resolve()
+    project_root = resolve_project_root(run_dir=run_dir, explicit_root=args.project_root)
     out_dir = run_dir / "artifacts" / "_audit" / "video_ingest"
     keyframes_dir = out_dir / "keyframes"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -364,10 +379,17 @@ def main() -> int:
                 print("ERROR: ffmpeg audio extraction failed")
                 print(stderr.strip())
                 return code
-            code = run_transcription(package_root(), audio_path, transcript_json, transcript_txt, args.model)
+            code = run_transcription(
+                run_dir,
+                audio_path,
+                transcript_json,
+                transcript_txt,
+                args.model,
+                project_root,
+                args.transcript_python,
+            )
             if code != 0:
                 print("ERROR: faster-whisper transcription failed")
-                print("请先运行 slbb-video-doctor，并确认 .venv 内已安装 faster-whisper。")
                 return code
             transcript_status = f"ok ({args.model})"
 

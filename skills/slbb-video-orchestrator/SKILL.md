@@ -55,6 +55,13 @@ When S2 is completed, `workflow_state.json` must initialize `segment_state` from
    bin/slbb-video-ingest --run-dir <AI长剧生成过程文件目录> --video <本地视频路径或直链>
    ```
 
+   If this skill is installed as a standalone local skill rather than used from the full project root, run the wrapper from this skill directory:
+   ```bash
+   ./bin/slbb-video-source <AI长剧生成过程文件目录> --source-ref <本地视频路径或直链>
+   ./bin/slbb-video-ingest --run-dir <AI长剧生成过程文件目录> --video <本地视频路径或直链>
+   ```
+   The ingest script resolves `faster_whisper` from `--transcript-python`, `SLBB_VIDEO_PYTHON`, `SLBB_VIDEO_VENV_PYTHON`, or the nearest project/skill `.venv`.
+
    For a platform share link, `slbb-video-source` records the link and stops. The user must download/record the video first; do not embed third-party download logic inside this skill.
 
 2. Ask for the next step:

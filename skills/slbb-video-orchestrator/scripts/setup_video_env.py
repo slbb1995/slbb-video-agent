@@ -8,17 +8,8 @@ import platform
 import shutil
 import subprocess
 import sys
-from pathlib import Path
 
-
-def package_root() -> Path:
-    return Path(__file__).resolve().parents[3]
-
-
-def venv_python(root: Path) -> Path:
-    if platform.system().lower().startswith("win"):
-        return root / ".venv" / "Scripts" / "python.exe"
-    return root / ".venv" / "bin" / "python"
+from video_env_lib import requirements_file, resolve_project_root, venv_python
 
 
 def run(cmd: list[str]) -> int:
@@ -29,6 +20,7 @@ def run(cmd: list[str]) -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Install video preprocessing Python dependencies into .venv")
     parser.add_argument("--video", action="store_true", help="Install the video preprocessing dependency set")
+    parser.add_argument("--project-root", help="slbb-video-agent project root or standalone skill root")
     args = parser.parse_args()
 
     if not args.video:
@@ -38,10 +30,10 @@ def main() -> int:
         print(f"ERROR: Python 3.10+ is required, current is {sys.version.split()[0]}")
         return 1
 
-    root = package_root()
-    requirements = root / "requirements-video.txt"
-    if not requirements.exists():
-        print(f"ERROR: missing requirements file: {requirements}")
+    root = resolve_project_root(explicit_root=args.project_root)
+    requirements = requirements_file(root)
+    if not requirements:
+        print(f"ERROR: missing requirements-video.txt near: {root}")
         return 1
 
     venv_dir = root / ".venv"

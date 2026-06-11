@@ -96,6 +96,26 @@ Copy-Item -Recurse .\skills\slbb-video-* "$env:USERPROFILE\.codex\skills\"
 
 安装后，在 Codex 里点名对应 skill 即可。Claude Code / WorkBuddy 等环境如果没有这个目录，不要强行创建，直接让 AI 读取项目内的 skill 文档。
 
+单独安装 `skills/slbb-video-orchestrator` 时，这个 skill 自己也带了视频相关 wrapper：
+
+```bash
+skills/slbb-video-orchestrator/bin/slbb-video-doctor
+skills/slbb-video-orchestrator/bin/slbb-video-setup --video
+skills/slbb-video-orchestrator/bin/slbb-video-source <run-dir> --source-ref <素材路径或链接>
+skills/slbb-video-orchestrator/bin/slbb-video-ingest --run-dir <run-dir> --video <本地视频路径>
+```
+
+Windows 对应使用 `.cmd`：
+
+```powershell
+skills\slbb-video-orchestrator\bin\slbb-video-doctor.cmd
+skills\slbb-video-orchestrator\bin\slbb-video-setup.cmd --video
+skills\slbb-video-orchestrator\bin\slbb-video-source.cmd <run-dir> --source-ref <素材路径或链接>
+skills\slbb-video-orchestrator\bin\slbb-video-ingest.cmd --run-dir <run-dir> --video <本地视频路径>
+```
+
+如果 AI Agent 只拿到了单独 skill 目录，没有完整项目根目录，也可以在该 skill 目录内运行 `bin/` wrapper。转写环境会优先查 `SLBB_VIDEO_PYTHON` / `SLBB_VIDEO_VENV_PYTHON`，再查项目或 skill 目录下的 `.venv`。
+
 ## V2 监控台衔接
 
 如果你的 run 是从 V2 监控台（ai-drama-monitor）导出的 handoff.md 启动的，用 `slbb-video-from-handoff` 命令把交接包直接导入：
