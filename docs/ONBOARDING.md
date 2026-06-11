@@ -73,12 +73,12 @@ Copy-Item .\examples\sample-inputs\source-note-FILLED.md ".\AI短剧工作流\on
 > **如果你做 AI 长剧并且素材是本地视频/录屏/字幕**：不要复制 `source-note-FILLED.md`，改用 `slbb-video-source` 登记素材，再用 `slbb-video-ingest` 生成 `artifacts/_audit/video_ingest/` 后再跑长剧 S1。
 > **如果素材是抖音/小红书等平台链接**：先按 `START_HERE.md` 下载或录屏成本地视频，不要直接进 S1。
 
-## 4. 让 Codex 跑 S1（2 分钟）
+## 4. 让当前 AI Agent 跑 S1（2 分钟）
 
-在 Codex 里点名 `slbb-video-research-script` skill：
+让当前 AI Agent 按 `skills/slbb-video-research-script/SKILL.md` 执行：
 
 ```text
-请运行 slbb-video-research-script，处理 ./AI短剧工作流/onboard_demo
+请按 skills/slbb-video-research-script/SKILL.md，处理 ./AI短剧工作流/onboard_demo
 ```
 
 Skill 完成后会写两个文件：

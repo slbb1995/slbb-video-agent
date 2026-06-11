@@ -120,7 +120,7 @@ Read `references/clean_output_contract.md` for the clean-output boundary: S1-S7 
 - If a validator fails, keep the current stage open and write a clear handoff note.
 - `workflow_state.json` is the local truth source for one AI 短剧生成过程文件目录.
 - After S2, `workflow_state.json.segment_state.current_segment` is the local truth source for the active episode/clip.
-- `artifacts/_handoff/next_step.md` is the next-action note for the next Codex conversation.
+- `artifacts/_handoff/next_step.md` is the next-action note for the next agent conversation.
 - Total completion requires S1-S8 completed, all gates confirmed, and state validation passing.
 
 ## Anti-pattern Blacklist

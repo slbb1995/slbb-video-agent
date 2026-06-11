@@ -154,7 +154,7 @@ https://sv.bugpk.com/
 2. 打开 `https://sv.bugpk.com/`。
 3. 粘贴链接并解析。
 4. 下载视频文件。
-5. 把下载后的本地视频路径重新交给 Codex。
+5. 把下载后的本地视频路径重新交给当前 AI Agent。
 6. 再运行 `slbb-video-source` 和 `slbb-video-ingest`。
 
 注意：
@@ -162,7 +162,7 @@ https://sv.bugpk.com/
 - 第三方解析网站可能失效、限流或解析失败。
 - 如果解析失败，可以改用录屏、平台自带保存、截图+字幕材料。
 - 请只处理你有权学习、分析或二创的素材。
-- Codex 不直接解析抖音/小红书链接，必须先转换成本地视频文件。
+- AI Agent 不直接解析抖音/小红书链接，必须先转换成本地视频文件。
 - 这个网站只写在 `START_HERE.md` 作为学员操作说明，不写进 skill 核心逻辑。
 
 ---
@@ -262,7 +262,7 @@ Windows：
 Copy-Item .\examples\sample-inputs\source-note-template.md ".\AI短剧工作流\项目名\artifacts\S1\source_note.md"
 ```
 
-让客户填好 `source_note.md` 后，在 Codex 里运行 `slbb-video-research-script`。
+让客户填好 `source_note.md` 后，让当前 AI Agent 按 `skills/slbb-video-research-script/SKILL.md` 执行 S1。
 
 ### 方式 B — V2 handoff 启动
 

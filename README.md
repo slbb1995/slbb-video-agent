@@ -5,7 +5,7 @@
 
 这是「石榴爸爸 AI 短视频 / AI 短剧 / AI 长剧」团队交付版工作流包。
 
-包内包含 **10 个 Codex skills**（短剧 8 个 + 长剧 1 个 + 总控 1 个）：
+包内包含 **10 个本地 Agent skills**（短剧 8 个 + 长剧 1 个 + 总控 1 个）。Codex 可以安装成 skills；Claude Code、WorkBuddy 或其他 AI Agent 也可以直接读取 `skills/*/SKILL.md` 和本包 `bin/` 脚本来执行。
 
 - `slbb-video-orchestrator`：总控，负责状态机、人工闸门、下一步 handoff。
 - `slbb-video-research-script`：S1 短剧调研与剧情提取。
@@ -23,7 +23,7 @@
 - macOS / Linux：Terminal + Python 3.10+（运行 `python3 --version` 确认）。
 - Windows 10/11：PowerShell 或 cmd + Python 3.10+（优先运行 `py -3 --version`，不行再试 `python --version`）。
 - macOS / Linux 第一次使用可运行 `chmod +x bin/*`；Windows 不需要 `chmod`。
-- Codex 或其他支持本地 skill 的 Agent 环境。
+- 任意能读取本地文件并执行命令的 AI Agent 环境，例如 Codex、Claude Code、WorkBuddy 等。
 - S1-S8 状态机脚本是纯 stdlib；长剧本地视频预处理需要 ffmpeg / ffprobe 和包内 `.venv` 的 `faster-whisper`。
 
 首次处理本地视频前先运行：
@@ -36,6 +36,12 @@ Windows：
 
 ```powershell
 .\bin\slbb-video-doctor.cmd
+```
+
+## 给学员的一句话安装提示词
+
+```text
+请帮我安装并接管这个项目：https://github.com/slbb1995/slbb-video-agent.git 。先 clone 到本地，阅读 START_HERE.md、README.md、QUICKSTART.md；如果你的环境支持本地 skills，就按对应方式安装 skills/slbb-video-*；如果不支持，就直接在项目目录里读取 skills/*/SKILL.md 并使用 bin/ 脚本运行。先执行 slbb-video-doctor 检查环境，缺什么先告诉我并问我是否安装。
 ```
 
 ## 两种使用方式
@@ -68,7 +74,11 @@ py -3 .\bin\slbb-video.py validate ".\runs\demo"
 
 后续 skill 文档里如果看到 `python3 "$CODEX_SKILLS_ROOT/..."`，Windows 电脑统一把开头的 `python3` 换成 `py -3`。
 
-### 方式 B：安装到 Codex skills 目录
+### 方式 B：安装到支持的本地 skill 目录（可选）
+
+不是所有 AI Agent 都有本地 skill 目录。没有也没关系，直接使用方式 A，让 AI Agent 在本项目目录里读取 `skills/*/SKILL.md` 即可。
+
+如果你用 Codex，可以安装到 Codex skills 目录：
 
 macOS / Linux：
 
@@ -84,7 +94,7 @@ New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\skills"
 Copy-Item -Recurse .\skills\slbb-video-* "$env:USERPROFILE\.codex\skills\"
 ```
 
-安装后，在 Codex 里点名对应 skill 即可。
+安装后，在 Codex 里点名对应 skill 即可。Claude Code / WorkBuddy 等环境如果没有这个目录，不要强行创建，直接让 AI 读取项目内的 skill 文档。
 
 ## V2 监控台衔接
 

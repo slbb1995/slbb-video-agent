@@ -44,7 +44,7 @@ py -3 --version       # 确认 Python 3.10+ 可用；不行就试 python --versi
 cp examples/sample-inputs/source-note-FILLED.md \
    "./AI短剧工作流/first/artifacts/S1/source_note.md"
 
-# 3. 让 Codex 跑 S1（在 Codex 里说"请运行 slbb-video-research-script 处理 ./AI短剧工作流/first"）
+# 3. 让当前 AI Agent 跑 S1（说"请按 skills/slbb-video-research-script/SKILL.md 处理 ./AI短剧工作流/first"）
 
 # 4. 状态推进
 ./bin/slbb-video-advance "./AI短剧工作流/first" --stage S1 --status ready_for_human --note "等确认"
@@ -61,7 +61,7 @@ Windows PowerShell 对应命令：
 .\bin\slbb-video-init.cmd ".\AI短剧工作流\first" --title "我的第一条"
 Copy-Item .\examples\sample-inputs\source-note-FILLED.md ".\AI短剧工作流\first\artifacts\S1\source_note.md"
 
-# 然后在 Codex 里说：请运行 slbb-video-research-script，处理 .\AI短剧工作流\first
+# 然后对当前 AI Agent 说：请按 skills/slbb-video-research-script/SKILL.md 处理 .\AI短剧工作流\first
 
 .\bin\slbb-video-advance.cmd ".\AI短剧工作流\first" --stage S1 --status ready_for_human --note "等确认"
 .\bin\slbb-video-validate.cmd ".\AI短剧工作流\first"
