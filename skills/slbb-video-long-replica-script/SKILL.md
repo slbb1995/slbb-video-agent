@@ -117,6 +117,31 @@ Primary S1 outputs must not contain:
 - If the same character appears across age stages, list each age stage separately and record the continuity traits that should stay stable.
 - Keep one canonical name system in `story_segments.json`. Do not use source names in top-level `characters` and second-creation names inside `episodes`, or the reverse.
 
+## Failure Modes
+
+| Trigger | Required action | Forbidden shortcut |
+| --- | --- | --- |
+| `source_manifest.json` is missing | Stop and route back to `slbb-video-source` before writing S1. | Do not infer source type from chat history. |
+| `source_kind` is `platform_link` | 🛑 STOP: ask the user to download or record the platform video, then rerun source registration and ingest. | Do not analyze a Douyin/Xiaohongshu/Kuaishou/Bilibili share page directly. |
+| `local_video` or `direct_video_url` has no `video_ingest` packet | Run the environment doctor and ingest step with user approval. | Do not repeatedly read the full video in chat. |
+| `source_brief.md` is empty or still a template | Ask the user to fill the brief with key time points, character anchors, and dialogue evidence. | Do not replace the brief by consuming the raw video end to end. |
+| Input is screenshots, subtitles, notes, or oral description only | Mark the run as `partial_material`, write a low-confidence warning, and stop at the human gate. | Do not present the result as a full video breakdown. |
+| Visual evidence is unclear or unavailable | Record the missing evidence in `artifacts/_meta/S1_replica_notes.md` and ask for screenshots or timecoded notes. | Do not invent character appearance, camera movement, props, or scene facts. |
+| Character names diverge between source description and `story_segments.json` | Normalize to one canonical `characters[].name` system before validation. | Do not let downstream S2/S3 inherit mixed name systems. |
+| Any segment is shorter than 3 seconds or longer than 15 seconds | Re-split by visual/story beat and rerun validation. | Do not keep an invalid segment just because the story reads smoothly. |
+| Validator fails | Preserve the validator issue in `_handoff` or `_meta`, fix the owning S1 artifact, and rerun validation. | Do not move to S2 or mark S1 complete. |
+
+## Anti-pattern Blacklist
+
+- Do not use this skill for topic discovery, hot-video scoring, content workbench planning, or daily platform monitoring.
+- Do not let S1 generate video prompts, storyboard prompts, finished shooting scripts, cover copy, or publishing plans.
+- Do not paste full transcripts, full video analyses, all screenshots, or raw process dumps into primary S1 outputs.
+- Do not reprocess the same local video after `artifacts/_audit/video_ingest/` already exists.
+- Do not treat partial screenshots/subtitles/notes as complete source evidence.
+- Do not invent visual facts, dialogue, camera language, character age stages, or scene props that are not supported by the source packet.
+- Do not mix source role names and second-creation role names in `story_segments.json`.
+- Do not continue to S2 until required S1 files exist, validation passes, and the user confirms the replica description, second-creation direction, and segment split.
+
 ## Completion Gate
 
 S1 is complete only when all required artifacts exist, validation passes, and the user confirms the replica description, second-creation direction, and segment split.
