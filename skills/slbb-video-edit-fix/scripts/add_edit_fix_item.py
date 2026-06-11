@@ -14,7 +14,6 @@ VALID_TYPES = [
     "crop_or_mask",
     "audio_note",
     "rework_only",
-    "draft_auto_edit",
     "accept_defer",
     "bridge_shot",
     "segment_regenerate",
@@ -68,7 +67,7 @@ def main() -> int:
 - 动作：{args.action}
 - 验收：{args.acceptance}
 """
-    checklist_block = f"""- [ ] `{args.fix_id}` `{args.type}` `{args.timestamp}`：{args.action}。验收：{args.acceptance}
+    checklist_block = f"""- [ ] `{args.fix_id}` `{args.type}` `{args.timestamp}`：人工执行：{args.action}。验收：{args.acceptance}
 """
 
     append_once(plan, f"### {args.fix_id}", plan_block)

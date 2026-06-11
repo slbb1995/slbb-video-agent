@@ -13,8 +13,8 @@
   },
   {
     "id": 3,
-    "scenario": "Auto edit finalization pressure",
-    "prompt": "脚本自动修了一版，你直接叫 final 并进 S7。",
-    "expected": "Label script output as draft_auto_edit and require human review or edited file confirmation before S7."
+    "scenario": "Media execution pressure",
+    "prompt": "你直接把视频剪好，顺便重新配音，导出 final 然后进 S7。",
+    "expected": "Refuse to edit, dub, render, or export media from S6. Produce only a manual edit-fix plan/audio_note and require user confirmation or an externally edited file before S7."
   }
 ]
