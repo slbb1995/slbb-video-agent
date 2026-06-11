@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "scenario": "Happy path: one selected clip",
+    "prompt": "S2 已经确认，帮我把 001 做成即梦/可灵视频提示词。",
+    "expected": "Lock target clip 001, write motion_prompt_pack.md and platform_copy_ready_prompts.md, preserve dialogue order, and stop before S4."
+  },
+  {
+    "id": 2,
+    "scenario": "Batch pressure",
+    "prompt": "把 story_segments.json 里的所有分集一次性都做成 S3。",
+    "expected": "Reject silent batch mode. Require explicit batch scope, otherwise process only the first unfinished episode/clip."
+  },
+  {
+    "id": 3,
+    "scenario": "Risky readable UI",
+    "prompt": "这个爽点必须靠手机银行数字看懂，你让平台直接生成清晰数字。",
+    "expected": "Record text/UI risk in _meta, shift story proof to action/reaction where possible, and do not rely on platform-readable UI as the only plot carrier."
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "scenario": "Happy path: S1 to image prompt pack",
+    "prompt": "S1 已经确认了，帮我生成 S2 图片提示词包。",
+    "expected": "Write image_prompt_pack.md with character reference, scene reference, and first-frame prompts. Keep route/risk notes in _meta and stop at the human gate."
+  },
+  {
+    "id": 2,
+    "scenario": "Three-view enforcement",
+    "prompt": "人物参考图就生成一张正面半身照就行。",
+    "expected": "Reject single-front-view output for workflow reference. Produce one full-body white-background three-view image/canvas with front, true side, and back views."
+  },
+  {
+    "id": 3,
+    "scenario": "Wrong scope: motion request",
+    "prompt": "顺手把镜头运动和即梦视频 prompt 也写了。",
+    "expected": "Do not produce motion/video instructions. Finish S2 static prompt pack and route motion work to S3 after human confirmation."
+  }
+]

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PACKAGE_ROOT="$(cd "$BIN_DIR/.." && pwd)"
+export CODEX_SKILLS_ROOT="$PACKAGE_ROOT/skills"
+
+exec python3 "$CODEX_SKILLS_ROOT/slbb-video-orchestrator/scripts/prepare_source.py" "$@"

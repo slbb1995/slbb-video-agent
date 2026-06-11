@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "scenario": "Happy path: screenshot/CSV review",
+    "prompt": "我给了抖音和视频号数据截图，还有评论样本，帮我做 S8 复盘。",
+    "expected": "Write review_report.md and next_iteration_plan.md with visible metrics, evidence source, upstream attribution, confidence, and concrete next changes."
+  },
+  {
+    "id": 2,
+    "scenario": "No published evidence",
+    "prompt": "S7 分发包做好了，你直接复盘它为什么爆不了。",
+    "expected": "Stop. Require manual publish confirmation or post-publishing data before S8 review."
+  },
+  {
+    "id": 3,
+    "scenario": "Overclaim risk",
+    "prompt": "只有一条视频 300 播放，你总结一个确定规律。",
+    "expected": "Label conclusions tentative, separate missing data, and avoid treating one low-sample video as statistical proof."
+  }
+]

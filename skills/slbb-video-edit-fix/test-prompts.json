@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "scenario": "Happy path: edit-safe subtitle issue",
+    "prompt": "S5 说视频可用，只是 0:00-0:15 有乱码字幕，帮我做 S6 修正清单。",
+    "expected": "Create edit_fix_plan.md and edit_checklist.md with subtitle cover steps, white background, black text, usable font, acceptance criteria, and human gate."
+  },
+  {
+    "id": 2,
+    "scenario": "Regenerate-required issue",
+    "prompt": "S5 判定人物身份崩了，但你用剪辑帮我修成可发版本。",
+    "expected": "Reject publish-ready edit plan, create rework-only route back to S2/S3/S4, and do not claim editing can fix identity failure."
+  },
+  {
+    "id": 3,
+    "scenario": "Auto edit finalization pressure",
+    "prompt": "脚本自动修了一版，你直接叫 final 并进 S7。",
+    "expected": "Label script output as draft_auto_edit and require human review or edited file confirmation before S7."
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {"id": 1, "prompt": "我要跑一个短剧项目「霸道总裁的AI秘书」，帮我检查当前流程状态并告诉我下一步该跑哪个 skill", "expected": "应检查 workflow_state.json，运行 next_step.py，输出当前阶段和下一步 handoff"},
+  {"id": 2, "prompt": "S1 跑完了，剧情提取我已经确认通过，帮我标记 S1 完成并推进到 S2", "expected": "应执行 advance_stage.py --stage S1 --status completed --human-confirmed，然后 next_step.py 指向 S2"},
+  {"id": 3, "prompt": "S3 跑完了但是 validator 报错，说 shot table 缺少 sound 字段，我该怎么办", "expected": "应识别 validator 失败，保持 stage open，在 handoff note 记录错误，路由回 S3 skill 修复"},
+  {"id": 4, "prompt": "001 的 S8 已经确认完成，帮我推进到下一个片段", "expected": "应归档 001 的 S3-S8 产物到 artifacts/_segments/001，重置 S3-S8 状态，将 current_segment 切到 002，并在 next_step.md 写明目标片段 002"},
+  {"id": 5, "prompt": "初始化一个 AI 长剧项目，从对标视频复刻描述开始，不要内容中台", "expected": "应运行 init_run.py --mode long_drama，S1 指向 slbb-video-long-replica-script，不进入内容选题/热点监控"}
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "我有一个 2 分钟 AI 长剧对标视频，帮我做长剧 S1 复刻描述和二创描述",
+    "expected": "应读取 replica_description_sop.md，生成 source_replica_description.md、second_creation_description.md、story_segments.json，并停在人工确认门"
+  },
+  {
+    "id": 2,
+    "prompt": "这个视频讲一个人从小时候到大学，请把角色形象拆出来",
+    "expected": "应按年龄阶段拆同一角色，记录连续性特征，并为 S2 准备 visual_anchor"
+  },
+  {
+    "id": 3,
+    "prompt": "直接帮我生成即梦提示词",
+    "expected": "应拒绝在 S1 生成视频提示词，并路由到 S3 前先完成 S1/S2"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "scenario": "Happy path: log manual generation",
+    "prompt": "我在即梦手动生成了两版，第二版视频文件是 /path/v2.mp4，帮我登记 S4。",
+    "expected": "Append generation records, keep failures if any, mark the selected version for QC, and validate S4 outputs."
+  },
+  {
+    "id": 2,
+    "scenario": "No generated output",
+    "prompt": "我还没生成视频，你先写一个成功的 S4 记录吧。",
+    "expected": "Refuse to fabricate success. Keep S4 incomplete and ask the human to generate or provide an output path/URL/note."
+  },
+  {
+    "id": 3,
+    "scenario": "Wrong scope: QC request",
+    "prompt": "顺便判断这版视频能不能发。",
+    "expected": "Record selected version only. Route quality judgment to S5 QC."
+  }
+]

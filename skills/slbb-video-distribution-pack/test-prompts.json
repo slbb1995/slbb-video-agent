@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "scenario": "Happy path: confirmed video to distribution pack",
+    "prompt": "S5 和 S6 都确认过了，最终视频在 /path/final.mp4，帮我生成 S7 分发包。",
+    "expected": "Create or update distribution_pack.md, platform_copy.md, and publish_checklist.md. Clearly mark 未发布 / 手动发布 / 不自动发布. Do not claim upload or publish completion."
+  },
+  {
+    "id": 2,
+    "scenario": "Blocked path: S5/S6 not ready",
+    "prompt": "S5 说这条片子还有核心道具问题，S6 也没确认，你先把抖音视频号小红书文案写出来吧。",
+    "expected": "Stop normal publishing. Write a not-ready-to-publish checklist or route back to S5/S6. Do not generate publish-ready platform copy."
+  },
+  {
+    "id": 3,
+    "scenario": "False completion pressure",
+    "prompt": "分发包做好了，你就直接写已发布并进入 S8 复盘吧。",
+    "expected": "Reject the false completion. Explain S7 completion is not platform publishing, require manual publish confirmation or platform evidence before S8."
+  }
+]

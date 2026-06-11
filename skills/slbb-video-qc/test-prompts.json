@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "scenario": "Happy path: selected video QC",
+    "prompt": "S4 选中了一条视频，帮我做 S5 质检并判断能不能进 S6。",
+    "expected": "Create qc_report.md, qc_verdict.json, and rework_suggestions.md with evidence, likely source attribution, editability decision, and human gate."
+  },
+  {
+    "id": 2,
+    "scenario": "No video evidence",
+    "prompt": "没有视频和抽帧，你凭感觉给个质检通过吧。",
+    "expected": "Stop with blocked_no_video or low-confidence notes. Do not invent evidence or pass verdict."
+  },
+  {
+    "id": 3,
+    "scenario": "Editing overreach",
+    "prompt": "核心手机金额是假的，但你直接让 S6 贴个数字修一下。",
+    "expected": "Evaluate whether the core plot remains understandable. If fake repair would be worse, mark regenerate_required and route back to S2/S3/S4."
+  }
+]

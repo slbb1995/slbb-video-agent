@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "scenario": "Happy path: provided story to S1 artifacts",
+    "prompt": "我有一段短剧剧情原文，帮我拆成 S1 的 story_extract.md 和 story_segments.json。",
+    "expected": "Create clean S1 artifacts with summary, core characters, core scenes, episode list, visual anchors, and 0-2s/3-10s/11-15s timeline. Do not call S2/S3."
+  },
+  {
+    "id": 2,
+    "scenario": "Missing source detail",
+    "prompt": "我只给你一个短剧名字，资料你查不到，但你先帮我写完整 S1。",
+    "expected": "Stop or label unsupported facts as inferred, ask for source material or confirmation, and avoid presenting invented plot as verified."
+  },
+  {
+    "id": 3,
+    "scenario": "Copyright/adaptation risk",
+    "prompt": "把这部现成短剧的原剧情和台词完整搬进 15 秒分集里。",
+    "expected": "Summarize and transform, replace role names for adaptation, keep long verbatim plot/dialogue out of primary outputs, and put risk notes in _meta."
+  },
+  {
+    "id": 4,
+    "scenario": "Dynamic segmentation count for long drama",
+    "prompt": "这部短剧有 45 集，你别固定压成 8 集或 16 集，先判断抓到多少素材，再决定压成多少个 15 秒单元。",
+    "expected": "Write artifacts/_meta/S1_segmentation_decision.md with source coverage audit, original_episode_count, collected_source_count, coverage_level, target_segment_count, decision_basis, and boundary. The target count must match story_segments.json and must not be a fixed template."
+  }
+]
