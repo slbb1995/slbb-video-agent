@@ -1,152 +1,152 @@
 ---
 name: slbb-video-image-prompts
-description: AI 短剧/长剧 S2 图片提示词生成。Use when the user has S1 story extraction/replica artifacts, short drama plot text, long drama second-creation descriptions, episode segments, character notes, scene notes, or asks to generate “生图片参考提示词”, “首图提示词”, “人物参考图”, “白底三视图”, “场景图”, “短剧角色定妆照”, “长剧多年龄段角色图”, “短剧场景空镜”, or S2 image prompt pack for the slbb-video workflow.
+description: AI 短剧/长剧 S2 图片提示词生成。当用户已有 S1 剧情提取/复刻产物、短剧剧情文本、长剧二创描述、分集片段、角色说明、场景说明，或要求生成“生图片参考提示词”“首图提示词”“人物参考图”“白底三视图”“场景图”“短剧角色定妆照”“长剧多年龄段角色图”“短剧场景空镜”，以及 slbb-video 工作流的 S2 图片提示词包时使用。
 ---
 
 # AI 短剧 S2：图片提示词
 
-## Overview
+## 概览
 
-Use this skill to turn S1 story outputs into image-generation prompts for short-drama or long-drama production.
+这个技能用来把 S1 故事产物转换成短剧/长剧生产用的图片生成提示词。
 
-S2 only handles static image prompts. It does not generate motion/video prompts, call image/video APIs, edit images, or publish content.
+S2 只处理静态图片提示词。它不生成生视频提示词，不调用图片/视频 API，不修图，也不发布内容。
 
-## Operating Gates
+## 执行闸门
 
-- 🔴 CHECKPOINT: before generating prompts from a workflow run, verify S1 artifacts exist and contain character visual anchors.
-- 🔴 CHECKPOINT: before completing S2, confirm the human can use the prompt pack for image generation.
-- 🔴 CHECKPOINT: before S3 reads S2, keep route notes, critical-prop risks, and inferred details in `_meta/S2_prompt_notes.md`, not in `image_prompt_pack.md`.
-- 🛑 STOP: if S1 lacks stable character appearance details, route back to S1 or record inferred anchors before writing final prompts.
-- 🛑 STOP: if a requested route would create motion/video instructions, stop and route that work to S3.
+- 红色检查点：从工作流 run 生成提示词前，必须确认 S1 产物存在，并且包含角色视觉锚点。
+- 红色检查点：完成 S2 前，必须确认人工可以使用提示词包生成图片。
+- 红色检查点：S3 读取 S2 前，把路线说明、关键道具风险和推断细节放到 `_meta/S2_prompt_notes.md`，不要放进 `image_prompt_pack.md`。
+- 停止：如果 S1 缺少稳定角色外貌细节，回到 S1，或先记录推断锚点，再写最终提示词。
+- 停止：如果用户要求的路线会生成动作/视频说明，停止并转给 S3。
 
-## Routing
+## 路由
 
-Choose one route from the user request or workflow state:
+根据用户要求或工作流状态选择一个路线：
 
-- `full_pack`: generate character reference, scene reference, and first-frame prompts.
-- `character_reference`: generate white-background three-view character prompts.
-- `scene_reference`: generate empty-scene reference prompts.
-- `first_frame`: generate opening first-frame prompts.
+- `full_pack`：生成角色参考、场景参考和首帧提示词。
+- `character_reference`：生成白底三视图角色提示词。
+- `scene_reference`：生成空场景参考提示词。
+- `first_frame`：生成开场首帧提示词。
 
-Default to `full_pack` when S2 is called by the workflow and no specific route is requested.
+如果 S2 由工作流调用，且没有指定路线，默认使用 `full_pack`。
 
-## Workflow
+## 工作流程
 
-1. Inspect S1 artifacts if a run directory is provided:
+1. 如果提供了 run 目录，先检查 S1 产物：
    - `artifacts/S1/story_extract.md`
    - `artifacts/S1/source_replica_description.md`
    - `artifacts/S1/second_creation_description.md`
    - `artifacts/S1/story_segments.json`
-2. If S1 artifacts are unavailable, use the user-provided plot or episode text and clearly mark that the output is not workflow-verified.
-3. Run `scripts/scaffold_s2_run.py <run_dir>` when writing to a workflow run.
-4. Read only the needed references:
+2. 如果没有 S1 产物，使用用户提供的剧情或分集文本，并明确标注：该输出未经过工作流验证。
+3. 写入工作流 run 时，先运行 `scripts/scaffold_s2_run.py <run_dir>`。
+4. 只读取必要参考：
    - `references/character_reference_prompt.md`
    - `references/scene_reference_prompt.md`
    - `references/first_frame_prompt.md`
    - `references/output_contract.md`
-5. Write `artifacts/S2/image_prompt_pack.md`.
-   - This primary file must contain only image prompts that can be copied into an image generator or read by S3.
-   - Put route choice, inference notes, critical-prop risk, and human-gate notes in `artifacts/_meta/S2_prompt_notes.md`.
-6. Run `scripts/validate_s2_outputs.py <run_dir>`.
-7. Stop at the human gate. Do not continue to S3 until the user confirms image prompt usability.
+5. 写入 `artifacts/S2/image_prompt_pack.md`。
+   - 这个主文件只能包含可复制到图片生成器、或可供 S3 读取的图片提示词。
+   - 路线选择、推断说明、关键道具风险和人工闸门说明放到 `artifacts/_meta/S2_prompt_notes.md`。
+6. 运行 `scripts/validate_s2_outputs.py <run_dir>`。
+7. 停在人工闸门。用户确认图片提示词可用之前，不要继续进入 S3。
 
-## Prompt Rules
+## 提示词规则
 
-- Reuse the validated prompt structures in `references/`.
-- Keep character, scene, and first-frame prompts separated.
-- Character reference prompts must produce one full-body white-background three-view character sheet per character.
-- Each character reference prompt must explicitly say the three views are in one image/canvas/frame: front view, side view, and back view arranged side by side. Do not output a single front portrait, a single-angle full-body photo, or three separate image prompts.
-- Character reference prompts must use a `16:9 横向宽画布` by default. Character sheets are reference assets, not final video frames, so this ratio does not change between short-drama and long-drama runs.
-- The required three-view standard is a clean reference photo sheet: left-to-right front view, true 90-degree side profile, and back view; head-to-toe full body; same scale and height; neutral upright standing pose; plain white studio background; no crop.
-- Scene reference prompts must not contain people, shadows, silhouettes, body parts, or backs.
-- First-frame prompts must look like real short-drama screenshots, not posters.
-- Scene reference and first-frame prompts must explicitly include the production frame ratio:
-  - `short_drama`: `9:16 竖屏`
-  - `long_drama`: `16:9 横屏`
-- All image prompts must include no text, no watermark, and no logo.
-- For critical props such as cash, phone screens, bills, contracts, bank slips, or UI panels, prioritize natural realism over readable fake text. Do not ask for oversized pasted digits or poster-like prop labels unless the user explicitly chooses that tradeoff.
-- If a later plot point depends on readable numbers or UI text, record it as a risk note for S3/S4/S5 instead of forcing S2 to generate artificial-looking text.
-- Do not invent a stable character look if S1 provides explicit appearance details; use S1 first.
-- If S1 lacks appearance details, fill only production-useful details and label them as inferred.
-- Do not produce video motion instructions here. Save motion for S3.
+- 复用 `references/` 中已经验证过的提示词结构。
+- 角色、场景和首帧提示词要分开。
+- 角色参考提示词必须为每个角色生成一张全身白底三视图角色参考图。
+- 每条角色参考提示词必须明确说明：正面、侧面、背面三视图在同一张图片/画布/画面里，并排展示。不要输出单张正面肖像、单角度全身照，或三条分开的图片提示词。
+- 角色参考提示词默认使用 `16:9 横向宽画布`。角色图是参考资产，不是最终视频帧，所以短剧和长剧都用这个比例。
+- 必需三视图标准：干净参考照图版；从左到右依次为正面、真实 90 度侧面、背面；从头到脚全身；比例和身高一致；自然直立站姿；纯白摄影棚背景；不裁切。
+- 场景参考提示词不得包含人、影子、剪影、身体局部或背影。
+- 首帧提示词必须像真实短剧截图，不要像海报。
+- 场景参考和首帧提示词必须明确包含生产画幅：
+  - `short_drama`：`9:16 竖屏`
+  - `long_drama`：`16:9 横屏`
+- 所有图片提示词都必须包含：无文字、无水印、无 logo。
+- 对现金、手机屏幕、票据、合同、银行单据、UI 面板等关键道具，优先追求自然真实，不要追求可读但很假的文字。除非用户明确接受这个取舍，不要要求夸张粘贴大数字或海报式道具标签。
+- 如果后续剧情依赖可读数字或 UI 文字，把它记录为 S3/S4/S5 风险，不要强迫 S2 生成假感很强的文字。
+- 如果 S1 已提供明确外貌细节，不要重新编造稳定角色外貌；优先使用 S1。
+- 如果 S1 缺少外貌细节，只补生产必要信息，并标注为推断。
+- 不要在这里生成视频运动说明。动作留给 S3。
 
-## Long-Drama Mode
+## 长剧模式
 
-When `workflow_state.json.mode` is `long_drama`, S2 must treat S1 as a replica/second-creation description package:
+当 `workflow_state.json.mode` 为 `long_drama` 时，S2 必须把 S1 当作复刻/二创描述包处理：
 
-- Use `second_creation_description.md` as the production story source.
-- Use `source_replica_description.md` only to preserve visual logic and reference structure.
-- Generate separate character reference prompts for each meaningful age stage, such as childhood, youth, adult, or elderly versions.
-- If multiple age stages belong to the same person, preserve stable facial/temperament continuity while allowing age, costume, posture, and context to change.
-- Generate first-frame prompts per target segment when the segment changes age stage, scene, or emotional state.
-- Do not collapse all age stages into one generic character prompt.
-- Do not generate video movement, shot tables, or platform copy here.
+- 使用 `second_creation_description.md` 作为生产剧情来源。
+- `source_replica_description.md` 只用于保留视觉逻辑和参考结构。
+- 为每个有意义的年龄阶段分别生成角色参考提示词，例如童年、青年、成年、老年。
+- 如果多个年龄阶段属于同一个人，要保持脸部和气质连续，同时允许年龄、服装、姿态和上下文变化。
+- 当片段切换年龄阶段、场景或情绪状态时，按目标片段生成首帧提示词。
+- 不要把所有年龄阶段压成一个泛泛的角色提示词。
+- 不要在这里生成视频运动、分镜表或平台复制文案。
 
-## Required Output
+## 必需输出
 
-Write one Markdown pack:
+写入一个 Markdown 包：
 
 ```text
 artifacts/S2/image_prompt_pack.md
 ```
 
-It must include:
+它必须包含：
 
-- Character reference prompts
-- Scene reference prompts
-- First-frame prompts
+- 角色参考提示词
+- 场景参考提示词
+- 首帧提示词
 
-It must not include:
+它不得包含：
 
-- Workflow/V2 principles
-- Input source sections
-- Route-mode sections
-- Risk-note sections
-- Human confirmation sections
-- Long explanation of why the prompts were designed
+- Workflow/V2 原则
+- 输入来源章节
+- 路由模式章节
+- 风险说明章节
+- 人工确认章节
+- 为什么这样设计提示词的长篇解释
 
-Process notes can go to:
+过程记录可以放到：
 
 ```text
 artifacts/_meta/S2_prompt_notes.md
 ```
 
-## Failure Modes
+## 失败模式
 
-| Trigger | Required action | Forbidden shortcut |
+| 触发情况 | 必须动作 | 禁止的偷懒做法 |
 | --- | --- | --- |
-| S1 visual anchors are missing | Return to S1 or add clearly labeled inferred anchors in `_meta`. | Do not invent a character look without marking it. |
-| User asks for one portrait instead of three-view reference | Generate one image/canvas with front, true side, and back full-body views. | Do not output only a single front portrait. |
-| Scene prompt includes people or shadows | Rewrite as an empty scene reference. | Do not leave people, silhouettes, body parts, or backs in scene prompts. |
-| Critical prop requires readable text | Record the risk for S3/S4/S5 and prefer natural prop realism. | Do not force oversized fake digits or poster labels. |
-| User asks for motion, camera movement, or video generation | Route to S3. | Do not produce video motion instructions in S2. |
-| Validator fails on prompt pack | Fix the primary prompt pack before the human gate. | Do not continue to S3 with invalid S2 output. |
+| S1 缺少视觉锚点 | 回到 S1，或在 `_meta` 中明确标注推断锚点。 | 不标注就编造角色外貌。 |
+| 用户要求一张肖像而不是三视图参考 | 生成一张包含正面、真实侧面、背面全身视图的图片/画布。 | 只输出单张正面肖像。 |
+| 场景提示词包含人或影子 | 重写为空场景参考。 | 在场景提示词里留下人物、剪影、身体局部或背影。 |
+| 关键道具要求可读文字 | 为 S3/S4/S5 记录风险，并优先自然道具真实感。 | 强制生成夸张假数字或海报标签。 |
+| 用户要求动作、运镜或视频生成 | 转到 S3。 | 在 S2 里生成视频运动说明。 |
+| 提示词包验证失败 | 先修主提示词包，再进入人工闸门。 | 带着无效 S2 输出继续进入 S3。 |
 
-## Anti-pattern Blacklist
+## 反模式黑名单
 
-- Do not put route mode, inference notes, risk notes, or human-gate prose in `image_prompt_pack.md`.
-- Do not call image APIs or claim images were generated.
-- Do not output separate prompts for front/side/back when the requirement is one canvas containing three views.
-- Do not add text, logo, watermark, or poster design into image prompts.
-- Do not make first frames look like posters instead of real short-drama screenshots.
-- Do not silently override explicit S1 appearance details.
+- 不要把路线模式、推断说明、风险说明或人工闸门话术写进 `image_prompt_pack.md`。
+- 不要调用图片 API，或声称图片已经生成。
+- 当要求是一张画布包含三视图时，不要分别输出正面/侧面/背面三条提示词。
+- 不要在图片提示词里添加文字、logo、水印或海报设计。
+- 不要把首帧做成海报，而不是短剧真实截图。
+- 不要静默覆盖 S1 明确给出的外貌细节。
 
-## Commands
+## 命令
 
-Create S2 skeleton:
+创建 S2 骨架：
 
 ```bash
 python3 "$CODEX_SKILLS_ROOT/slbb-video-image-prompts/scripts/scaffold_s2_run.py" <run_dir>
 ```
 
-Validate S2 outputs:
+验证 S2 输出：
 
 ```bash
 python3 "$CODEX_SKILLS_ROOT/slbb-video-image-prompts/scripts/validate_s2_outputs.py" <run_dir>
 ```
 
-If `CODEX_SKILLS_ROOT` is not set, replace it with the local skills root.
+如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
 
-## Completion Gate
+## 完成闸门
 
-S2 is complete only when `image_prompt_pack.md` exists, validation passes, and the user has confirmed the prompts can be used for image generation. S2 approval is a human decision.
+只有 `image_prompt_pack.md` 存在、验证通过，并且用户确认提示词可以用于生成图片时，S2 才算完成。S2 放行是人工决策。

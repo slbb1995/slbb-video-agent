@@ -1,45 +1,45 @@
-# S6 Subtitle Cover Standard
+# S6 字幕遮挡标准
 
-Source: whiteboard S6 nodes.
+来源：白板 S6 节点。
 
-## Primary Use Case
+## 主要使用场景
 
-AI-generated video sometimes adds unstable or garbled subtitles. The first S6 fix is to cover those subtitles.
+AI 生成视频有时会添加不稳定或乱码字幕。S6 第一类修复，就是遮挡这些字幕。
 
-## Default Style
+## 默认样式
 
-- Background: white rectangle or white rounded rectangle if the editor tool makes it easier
-- Text: black
-- Font: commercially usable bold sans-serif
-- Preferred font family: 黑体, 思源黑体, Noto Sans CJK, or equivalent
-- Text position: placed over or near the original subtitle area, with the original text fully hidden
-- Opacity: 100% for the cover block unless the user explicitly chooses another style
-- Safety margin: cover block should exceed original bad text bounding box by at least 8-16 px
+- 背景：白色矩形；如果剪辑工具更方便，也可用白色圆角矩形
+- 文字：黑色
+- 字体：可商用粗体无衬线字体
+- 推荐字体：黑体、思源黑体、Noto Sans CJK 或同类字体
+- 文字位置：覆盖或靠近原字幕区域，必须完全遮住原文字
+- 不透明度：遮挡块默认 100%，除非用户明确选择其他样式
+- 安全边距：遮挡块应比原坏文字边界框至少大 8-16 px
 
-## Do
+## 应该做
 
-- Hide every frame where garbled text appears.
-- Keep subtitle meaning consistent with S3 original dialogue.
-- Keep contrast high enough for mobile viewing.
-- Avoid covering important faces, hands, props, or story actions.
-- Use one stable subtitle style across the whole clip.
+- 遮住乱码文字出现的每一帧。
+- 字幕含义保持与 S3 原台词一致。
+- 保持足够高的对比度，适合手机观看。
+- 避免盖住重要脸部、手、道具或故事动作。
+- 整条片段使用一种稳定字幕样式。
 
-## Do Not
+## 不要做
 
-- Do not use decorative fonts.
-- Do not use copyrighted or unlicensed fonts.
-- Do not leave the original garbled text partially visible.
-- Do not rewrite story meaning while replacing subtitles.
-- Do not claim editing is done without an edited output file or user confirmation.
+- 不要使用装饰性字体。
+- 不要使用有版权或未授权字体。
+- 不要让原乱码文字部分可见。
+- 替换字幕时不要改写故事含义。
+- 没有已剪辑输出文件或用户确认，不要声称剪辑已经完成。
 
-## Human Editor Notes
+## 人工剪辑师说明
 
-For 剪映/CapCut-style editing, the typical manual process is:
+对剪映/CapCut 类剪辑，常见人工流程是：
 
-1. Import selected video.
-2. Locate the bad subtitle/text timestamps.
-3. Add a white mask/block over the original text area.
-4. Add black text above the mask using a commercially usable bold sans-serif font.
-5. Preview frame by frame at each timestamp.
-6. Export test version.
-7. Recheck that no original garbled text leaks through.
+1. 导入选中视频。
+2. 定位坏字幕/文字时间戳。
+3. 在原文字区域添加白色遮罩/色块。
+4. 在遮罩上方用可商用粗体无衬线字体添加黑色文字。
+5. 每个时间戳逐帧预览。
+6. 导出测试版本。
+7. 复查原乱码文字没有漏出。

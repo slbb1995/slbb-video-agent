@@ -1,10 +1,10 @@
-# First-Frame Prompt
+# 首帧提示词
 
-Source: whiteboard prompt registry nodes `z3:65` and `z3:67`.
+来源：白板提示词注册节点 `z3:65` 和 `z3:67`。
 
-Use this route when the user needs a short-drama opening frame or a first image for video generation.
+当用户需要短剧开场画面，或需要给视频生成用的首张图时，使用本路线。
 
-## Input Form
+## 输入表单
 
 ```text
 输入：首帧画面描述
@@ -26,7 +26,7 @@ Use this route when the user needs a short-drama opening frame or a first image 
 11. 画面气质：
 ```
 
-## Prompt Template
+## 提示词模板
 
 ```text
 请生成一张短剧视频的开头首帧画面，画幅比例为{画幅比例}，不要生成海报感，不要字幕，不要水印，不要logo，不要拼贴，不要多余人物。画面要像真实短剧截图，重点固定人物站位、场景背景、空间关系和镜头视角，停在动作发生前一刻，静中有势。
@@ -46,10 +46,10 @@ Use this route when the user needs a short-drama opening frame or a first image 
 要求：影视写实风，人物关系清楚，主体明确，背景稳定，构图自然，符合短剧开场第一帧。
 ```
 
-## Output Rules
+## 输出规则
 
-- Produce one prompt per key episode or user-selected scene.
-- The first frame should stop before the action peaks.
-- Keep it image-only; do not include video movement instructions.
-- Include the correct mode ratio in every first-frame prompt: short_drama uses `9:16 竖屏`; long_drama uses `16:9 横屏`.
-- Always include no subtitles, no watermark, no logo, and no poster style.
+- 每个关键分集或用户选中的场景产出一条提示词。
+- 首帧应停在动作高潮之前。
+- 保持图片提示词属性；不要包含视频运动说明。
+- 每条首帧提示词都包含正确模式画幅：short_drama 使用 `9:16 竖屏`；long_drama 使用 `16:9 横屏`。
+- 始终包含无字幕、无水印、无 logo、不要海报风。

@@ -1,12 +1,12 @@
-# S6 Output Contract
+# S6 输出契约
 
-S6 is a workflow node. It is not complete until the manual correction plan and checklist exist and validate.
+S6 是工作流节点。只有人工修正方案和检查清单都存在并验证通过，S6 才算完成。
 
-S6 primary outputs are clean manual editing instructions. S6 does not edit, dub, render, export, or attach finished media. Capability limits, rejection logs, and operator notes belong in `artifacts/_audit/S6_edit_log.md`.
+S6 主输出是干净的人工剪辑说明。S6 不剪辑、不配音、不渲染、不导出、不附加成片媒体。能力边界、拒绝记录和操作者备注放到 `artifacts/_audit/S6_edit_log.md`。
 
-For `long_drama` mode, S6 can also describe segment-joining fixes such as `bridge_shot`, `segment_regenerate`, and `continuity_trim`, while keeping regenerate-required identity or story errors routed upstream.
+在 `long_drama` 模式下，S6 也可以描述片段衔接修复，例如 `bridge_shot`、`segment_regenerate` 和 `continuity_trim`，但必须把身份或故事错误这类必须重生成的问题回到上游。
 
-## Required Directory
+## 必需目录
 
 ```text
 <run_dir>/
@@ -15,12 +15,12 @@ For `long_drama` mode, S6 can also describe segment-joining fixes such as `bridg
       edit_fix_plan.md
       edit_checklist.md
     _audit/
-      S6_edit_log.md # optional
+      S6_edit_log.md # 可选
 ```
 
 ## edit_fix_plan.md
 
-Required headings:
+必需标题：
 
 ```markdown
 # S6 剪辑修正方案
@@ -33,7 +33,7 @@ Required headings:
 
 ## edit_checklist.md
 
-Required headings:
+必需标题：
 
 ```markdown
 # S6 人工剪辑修正清单
@@ -44,23 +44,23 @@ Required headings:
 ## 进入下一步条件
 ```
 
-## Required Quality Signals
+## 必需质量信号
 
-When `subtitle_cover` or `caption_replace` is present, the finished artifacts must include:
+当存在 `subtitle_cover` 或 `caption_replace` 时，最终产物必须包含：
 
 - `白底黑字`
 - `黑体`
 - `可商用`
 - `遮住`
-- At least one fix item id such as `fix-001`
+- 至少一个修复项 ID，例如 `fix-001`
 
-If no subtitle cover is needed, the `## 字幕遮挡方案` section must explicitly say `不需要字幕遮挡`, then list another manual fix item or route back upstream with `rework_only`.
+如果不需要字幕遮挡，`## 字幕遮挡方案` 章节必须明确写 `不需要字幕遮挡`，然后列出另一个人工修复项，或用 `rework_only` 回到上游。
 
-For audio, voiceover, narration, music, and sound problems, S6 must only output `audio_note` instructions for a human editor or route upstream. It must not produce or claim to produce audio files.
+对于音频、旁白、配音、音乐和声音问题，S6 只能输出给人工剪辑师的 `audio_note` 指令，或回到上游。它不得生成或声称生成音频文件。
 
-## Clean Output Guard
+## 干净输出保护
 
-Primary Markdown outputs must not include:
+主 Markdown 输出不得包含：
 
 - `Workflow` / `workflow`
 - `V2 原则`

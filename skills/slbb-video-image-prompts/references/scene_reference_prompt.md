@@ -1,10 +1,10 @@
-# Scene Reference Prompt
+# 场景参考图提示词
 
-Source: whiteboard prompt registry node `z3:79`.
+来源：白板提示词注册节点 `z3:79`。
 
-Use this route to create stable empty scenes for later video generation.
+当需要为后续视频生成创建稳定空场景时，使用本路线。
 
-## Prompt Template
+## 提示词模板
 
 ```text
 你是短剧场景设定拆解助手。
@@ -55,10 +55,10 @@ Use this route to create stable empty scenes for later video generation.
 {{短剧内容}}
 ```
 
-## Output Rules
+## 输出规则
 
-- Default to at most three core scenes.
-- Include the correct mode ratio in every scene prompt: short_drama uses `9:16 竖屏`; long_drama uses `16:9 横屏`.
-- No people, human shadows, silhouettes, backs, or body parts.
-- Environmental props are allowed when they help the story.
-- Keep it usable as a stable reference image, not a plot summary.
+- 默认最多输出三个核心场景。
+- 每条场景提示词都包含正确模式画幅：short_drama 使用 `9:16 竖屏`；long_drama 使用 `16:9 横屏`。
+- 不要出现人物、人影、剪影、背影或身体局部。
+- 有助于剧情理解的环境道具可以保留。
+- 作为稳定参考图使用，不要写成剧情总结。

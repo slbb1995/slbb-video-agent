@@ -1,6 +1,6 @@
 # S7 输出契约
 
-S7 primary outputs are clean publishing materials. Workflow reasoning, source notes, risk analysis, and human-gate notes belong in `artifacts/_meta/S7_distribution_notes.md` or the publish checklist.
+S7 主输出是干净的发布材料。工作流推理、来源记录、风险分析和人工闸门说明应放到 `artifacts/_meta/S7_distribution_notes.md` 或发布检查清单里。
 
 ## 必须输出
 

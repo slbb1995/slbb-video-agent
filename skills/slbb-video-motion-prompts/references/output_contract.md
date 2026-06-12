@@ -1,21 +1,21 @@
-# S3 Output Contract
+# S3 输出契约
 
-S3 is a workflow node. It is not complete until both required artifacts exist and validate.
+S3 是工作流的一个节点。只有两个必需产物都存在并且验证通过，S3 才算完成。
 
-S3 primary outputs are clean execution prompts. `motion_prompt_pack.md` is the compact shot/prompt design for downstream use. `platform_copy_ready_prompts.md` is the direct paste surface for 即梦/可灵. Process notes belong in `artifacts/_meta/S3_motion_design_notes.md`.
+S3 主输出必须是干净的执行提示词。`motion_prompt_pack.md` 是给下游使用的精简分镜/提示词设计；`platform_copy_ready_prompts.md` 是给即梦/可灵直接复制粘贴的版本。过程记录统一放到 `artifacts/_meta/S3_motion_design_notes.md`。
 
-Default scope: one S3 run covers one target episode/clip only. If the user has not named a target, use the first unfinished segment, usually `001`. Do not include multiple episode/clip prompt blocks in one S3 output unless the user explicitly asked for a batch override.
+默认范围：一次 S3 运行只覆盖一个目标分集/片段。如果用户没有指定目标，使用第一个未完成片段，通常是 `001`。除非用户明确要求批量覆盖，否则不要在一个 S3 输出里放入多个分集/片段的提示词块。
 
-For `long_drama` mode, S3 still outputs the same two files. The difference is input priority: consume the selected S1 segment's detailed `second_creation_description` and `replica_description`, plus S2 character/scene/first-frame references, instead of rewriting from a short plot sentence. The long-drama reverse-prompt reference belongs in prompt design notes and execution behavior, not as a process explanation inside the primary outputs.
+在 `long_drama` 模式下，S3 仍然输出同样两个文件。区别在于输入优先级：读取所选 S1 片段的详细 `second_creation_description` 和 `replica_description`，再结合 S2 角色、场景和首帧参考，而不是从一句简短剧情重新改写。长剧反推参考应该影响提示词设计和执行行为，不要作为流程解释写进主输出。
 
-Frame ratio is mode-specific:
+画幅按模式区分：
 
-- `short_drama`: `9:16 竖屏`
-- `long_drama`: `16:9 横屏`
+- `short_drama`：`9:16 竖屏`
+- `long_drama`：`16:9 横屏`
 
-If generated S2 reference sheets or storyboard/contact sheets are provided, use them only to lock visual consistency. Do not reproduce panel labels, grids, numeric overlays, borders, or contact-sheet layouts inside the video prompt.
+如果提供了 S2 生成参考图、分镜表或联络表，只用它们锁定视觉一致性。不要把面板标签、宫格、数字叠字、边框或联络表排版写进视频提示词。
 
-## Required Directory
+## 必需目录
 
 ```text
 <run_dir>/
@@ -24,12 +24,12 @@ If generated S2 reference sheets or storyboard/contact sheets are provided, use 
       motion_prompt_pack.md
       platform_copy_ready_prompts.md
     _meta/
-      S3_motion_design_notes.md # optional
+      S3_motion_design_notes.md # 可选
 ```
 
 ## motion_prompt_pack.md
 
-Must include:
+必须包含：
 
 ```markdown
 # S3 生视频提示词包
@@ -40,7 +40,7 @@ Must include:
 ## 分镜提示词表
 ```
 
-The shot table must include this header:
+分镜表必须使用这个表头：
 
 ```markdown
 | 时间 | 镜头 | 景别 | 运镜 | 画面内容 | 动作 | 微表情 | 台词口型 | 声音 | 时长 | 本镜头作用 | 平台优化标签 |
@@ -48,7 +48,7 @@ The shot table must include this header:
 
 ## platform_copy_ready_prompts.md
 
-Must include:
+必须包含：
 
 ```markdown
 # S3 平台复制版提示词
@@ -58,9 +58,9 @@ Must include:
 ## 可灵复制版
 ```
 
-## Required Quality Signals
+## 必需质量信号
 
-The finished artifacts must include:
+最终产物必须包含：
 
 - `角色锁定`
 - `场景锁定`
@@ -68,18 +68,18 @@ The finished artifacts must include:
 - `环境：`
 - `SFX：`
 - `平台优化标签`
-- the mode-specific frame ratio: `9:16 竖屏` for `short_drama`, or `16:9 横屏` for `long_drama`
+- 与模式匹配的画幅：`short_drama` 使用 `9:16 竖屏`，`long_drama` 使用 `16:9 横屏`
 - `即梦`
 
-They must identify exactly one target episode/clip, such as `001` or the user-provided clip ID.
+产物必须只识别一个目标分集/片段，例如 `001` 或用户提供的 clip ID。
 
-They must not contain unfinished placeholders:
+产物不得包含未完成占位符：
 
 - `TODO`
 - `待填写`
 - `待补充`
 
-They must not contain process/noise markers:
+产物不得包含过程噪音标记：
 
 - `Workflow` / `workflow`
 - `V2 原则`

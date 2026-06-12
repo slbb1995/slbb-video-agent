@@ -1,10 +1,10 @@
-# Character Reference Prompt
+# 角色参考图提示词
 
-Source: whiteboard prompt registry node `z3:73`.
+来源：白板提示词注册节点 `z3:73`。
 
-Use this route to create stable role images for later short-drama video generation.
+当需要为后续短剧视频生成稳定角色图时，使用本路线。
 
-## Prompt Template
+## 提示词模板
 
 ```text
 你是短剧人物设定拆解助手。
@@ -39,11 +39,11 @@ Use this route to create stable role images for later short-drama video generati
 {{短剧内容}}
 ```
 
-## Output Rules
+## 输出规则
 
-- Default to at most three core characters.
-- Preserve S1 replacement names if available.
-- Mark inferred appearance details when S1 did not specify them.
-- Do not include story action or scene background.
-- Every prompt must include `16:9 横向宽画布`, white background, head-to-toe full body, one image/canvas/frame, left-to-right side-by-side front / true 90-degree side profile / back views, same scale and height, neutral upright standing pose, no crop, no text, no watermark, no logo.
-- The character reference section must not contain single-view prompts. If a role only has a front-view prompt, rewrite it before S2 can pass.
+- 默认最多输出三个核心人物。
+- 如果 S1 已有替换名，保留替换名。
+- 如果 S1 没有明确外貌，标注推断外貌细节。
+- 不要包含剧情动作或场景背景。
+- 每条提示词必须包含 `16:9 横向宽画布`、白底、从头到脚全身、同一张图片/画布/画面、从左到右并排正面 / 真实 90 度侧面 / 背面、相同比例和高度、自然直立站姿、不裁切、无文字、无水印、无 logo。
+- 角色参考章节不得包含单视角提示词。如果某个角色只有正面提示词，S2 通过前必须重写。

@@ -1,29 +1,29 @@
 ---
 name: slbb-video-motion-prompts
-description: AI 短剧/长剧 S3 生视频提示词生成，把 S1 剧情分集或长剧复刻/二创片段描述，以及 S2 图片提示词/首帧/角色/场景参考，转换成即梦或可灵可复制的视频生成提示词。Use when the user asks for “生视频提示词”, “剧情生视频提示词”, “长剧反推提示词”, “即梦视频 prompt”, “可灵图生视频提示词”, “短剧镜头表”, “15秒短剧分镜”, “把剧情转成视频提示词”, or S3 motion prompt artifacts for the slbb-video workflow.
+description: AI 短剧/长剧 S3 生视频提示词生成，把 S1 剧情分集或长剧复刻/二创片段描述，以及 S2 图片提示词、首帧、角色、场景参考，转换成即梦或可灵可复制的视频生成提示词。当用户要求“生视频提示词”“剧情生视频提示词”“长剧反推提示词”“即梦视频提示词”“可灵图生视频提示词”“短剧镜头表”“15秒短剧分镜”“把剧情转成视频提示词”，或要求生成 slbb-video 工作流的 S3 生视频提示词产物时使用。
 ---
 
 # AI 短剧 S3：生视频提示词
 
-## Overview
+## 概览
 
-Use this skill to convert approved story segments and image references into copy-ready video generation prompts for short-drama or long-drama tools such as 即梦 or 可灵.
+这个技能用来把已经确认过的剧情片段和图片参考，转换成适合即梦、可灵等短剧/长剧视频工具直接复制使用的视频生成提示词。
 
-S3 only produces motion/video prompts and platform-copy files. It does not call video APIs, upload images, select generated videos, or perform QC.
+S3 只产出生视频提示词和平台复制版文件。它不调用视频 API，不上传图片，不挑选生成结果，也不做成片质检。
 
-S3's default scope is exactly one target episode/clip. After S2 is approved, start with the first unfinished segment, usually `001`, and produce only that segment's video prompts. Do not generate prompts for every episode/clip in `story_segments.json` unless the user explicitly asks for a batch override.
+S3 默认只处理一个目标分集/片段。S2 确认后，先从第一个未完成片段开始，通常是 `001`，并且只生成这个片段的视频提示词。除非用户明确要求批量覆盖，否则不要把 `story_segments.json` 里的所有分集/片段一次性全部生成。
 
-## Operating Gates
+## 执行闸门
 
-- 🔴 CHECKPOINT: before writing any prompt, lock exactly one target episode/clip unless the user gives an explicit batch scope.
-- 🔴 CHECKPOINT: before completing S3, preserve original dialogue order and confirm the prompt pack is ready for manual generation.
-- 🔴 CHECKPOINT: before using readable text/phone UI/bank screens as a plot carrier, record the risk in `_meta/S3_motion_design_notes.md`.
-- 🛑 STOP: if the user asks S3 to generate videos or choose the best generated version, route to S4/S5 instead.
-- 🛑 STOP: if a 15-second prompt only repeats reaction shots, shorten or restructure before validation.
+- 红色检查点：写任何提示词之前，必须锁定且只锁定一个目标分集/片段；除非用户明确给出批量范围。
+- 红色检查点：完成 S3 前，必须保留原始台词顺序，并确认提示词包已经可以进入人工生成。
+- 红色检查点：如果要用可读文字、手机 UI、银行页面作为剧情证明，必须把风险记录到 `_meta/S3_motion_design_notes.md`。
+- 停止：如果用户要求 S3 直接生成视频，或要求挑选最佳生成版本，转到 S4/S5，不在 S3 内处理。
+- 停止：如果 15 秒提示词只是重复反应镜头，必须先压缩或重构，再进入验证。
 
-## Inputs
+## 输入
 
-Prefer workflow artifacts:
+优先使用工作流产物：
 
 ```text
 artifacts/S1/story_extract.md
@@ -33,148 +33,148 @@ artifacts/S1/story_segments.json
 artifacts/S2/image_prompt_pack.md
 ```
 
-If these are unavailable, use user-provided plot, image notes, role cards, scene cards, first frames, generated S2 reference sheets, storyboard/contact sheets, or target platform details, and clearly mark the output as not workflow-verified.
+如果这些文件不存在，可以使用用户提供的剧情、图片说明、角色卡、场景卡、首帧图、S2 生成参考图、分镜/联络表、目标平台信息，并在输出里明确标注：该结果未经过工作流产物验证。
 
-## Workflow
+## 工作流程
 
-1. Inspect S1 and S2 artifacts if a run directory is provided.
-2. Select one target episode/clip before writing anything:
-   - Prefer the episode/clip named by the user or `_handoff/next_step.md`.
-   - If no target is named, choose the first unfinished segment from `artifacts/S1/story_segments.json`, usually `001`.
-   - Use S2's full character and scene prompt pack only as a reference library; copy only the references needed by the target episode/clip.
-3. Decide target duration before writing shots. Do not default to 15 seconds without checking the episode information density.
-4. Confirm target platform, duration, aspect ratio, and language. Defaults:
-   - platform: 即梦
-   - duration: choose from 5s / 10s / 10-12s / 15s based on the duration decision rules below
-   - aspect ratio: `short_drama` uses `9:16 竖屏`; `long_drama` uses `16:9 横屏`; user override wins
-   - style: 写实、电影质感、真实人物比例、浅景深、轻微手持、真实生活光影
-   - mouth language: 中文
-5. Run `scripts/scaffold_s3_run.py <run_dir>` when writing to a workflow run.
-6. Read:
+1. 如果用户提供了运行目录，先检查 S1 和 S2 产物。
+2. 写入任何内容之前，先选择一个目标分集/片段：
+   - 优先使用用户点名的分集/片段，或 `_handoff/next_step.md` 指定的目标。
+   - 如果没有指定目标，从 `artifacts/S1/story_segments.json` 里选择第一个未完成片段，通常是 `001`。
+   - S2 的完整角色和场景提示词包只能作为参考库使用；只复制目标分集/片段真正需要的参考。
+3. 写分镜前，先判断目标时长。不要不看信息密度就默认写 15 秒。
+4. 确认目标平台、时长、画幅和语言。默认值：
+   - 平台：即梦
+   - 时长：根据下方“时长判断规则”，在 5s / 10s / 10-12s / 15s 中选择
+   - 画幅：`short_drama` 使用 `9:16 竖屏`；`long_drama` 使用 `16:9 横屏`；用户明确指定时，以用户为准
+   - 风格：写实、电影质感、真实人物比例、浅景深、轻微手持、真实生活光影
+   - 口型语言：中文
+5. 写入工作流运行目录时，先运行 `scripts/scaffold_s3_run.py <run_dir>`。
+6. 读取：
    - `references/motion_prompt_12_steps.md`
-   - `references/long_drama_reverse_prompt.md` when `workflow_state.json.mode` is `long_drama`
+   - 当 `workflow_state.json.mode` 为 `long_drama` 时，读取 `references/long_drama_reverse_prompt.md`
    - `references/output_contract.md`
-7. Write:
+7. 写入：
    - `artifacts/S3/motion_prompt_pack.md`
    - `artifacts/S3/platform_copy_ready_prompts.md`
-   - optional process notes under `artifacts/_meta/S3_motion_design_notes.md`
-8. Run `scripts/validate_s3_outputs.py <run_dir>`.
-9. Stop at the human gate. Do not continue to S4 until the user confirms the prompts are ready for manual generation.
+   - 可选过程记录写入 `artifacts/_meta/S3_motion_design_notes.md`
+8. 运行 `scripts/validate_s3_outputs.py <run_dir>`。
+9. 停在人工闸门。用户确认提示词可以用于人工生成之前，不要继续进入 S4。
 
-## Duration Decision Rules
+## 时长判断规则
 
-Before writing the shot table, answer these questions internally or in `artifacts/_meta/S3_motion_design_notes.md`, not in the clean platform-copy prompt:
+写分镜表之前，先在内部判断，或记录到 `artifacts/_meta/S3_motion_design_notes.md`，不要写进干净的平台复制版提示词：
 
-- How many effective information beats does this episode have?
-- Is it a single visual hook, a small reversal, or a reversal plus next-episode hook?
-- Does every 3 seconds add new information?
-- If 3 seconds are removed, does the story lose a necessary beat?
-- Does the ending need a new hook or only a reaction?
+- 这一集/片段有几个有效信息点？
+- 它是一个单独视觉钩子、一个小反转，还是“反转 + 下一集钩子”？
+- 每 3 秒是否都有新信息？
+- 如果删掉 3 秒，故事是否会丢失必要信息？
+- 结尾需要新钩子，还是只需要反应镜头？
 
-Use these defaults:
+默认选择：
 
-- `5s`: one visual hook only; no full story closure.
-- `10s`: one complete mini-reversal with 2-3 core shots.
-- `10-12s`: short-drama first-episode hook with humiliation, proof, reaction, and a next hook.
-- `15s`: only when there are at least two effective reversals, or one reversal plus a new relationship/task setup.
+- `5s`：只有一个视觉钩子；不需要完整闭环。
+- `10s`：一个完整小反转，包含 2-3 个核心镜头。
+- `10-12s`：短剧第一集钩子，包含羞辱、证据、反应和下一钩子。
+- `15s`：只有在至少有两个有效反转，或一个反转加一个新的关系/任务设定时使用。
 
-If the episode has one core爽点, do not stretch it to 15s by repeating reaction shots or phone-confirmation shots.
+如果这一集只有一个核心爽点，不要靠重复反应镜头或手机确认镜头硬拉到 15 秒。
 
-## Non-Negotiable Rules
+## 不可违背规则
 
-- Preserve user-provided original dialogue exactly. Do not rewrite, omit, merge, reorder, or change speakers.
-- If original dialogue is long, add shots or split the same sentence across continuous shots while preserving order.
-- If original dialogue is risky, keep the original in the main table and add safety alternatives in notes; do not silently replace it.
-- If no dialogue exists, write `台词：无`; optional lines must be labeled as optional.
-- Convert abstract emotions into body action, micro-expression, camera movement, sound, and environment changes.
-- Every shot must include time, shot number, shot size, camera movement, visual content, action, micro-expression, lip-sync dialogue, sound, duration, shot purpose, and platform optimization tags.
-- Every shot must have sound in this format: `台词：...；环境：...；SFX：...`.
-- Do not use split-screen, grids, numeric overlays, decorative watermarks, meaningless empty shots, random face changes, or random costume changes.
-- If the user provides a storyboard/contact sheet with panel numbers or grid borders, treat those numbers and borders as reference IDs only. Do not reproduce panel labels, grids, borders, or contact-sheet layout in the video prompt.
-- Do not rely on platform-generated readable phone UI, bank screens, bills, contracts, or long text as the only way viewers understand the plot. If readable text is necessary, keep it short, record the risk, and make character action/reaction carry the story.
-- For key money props, prefer natural prop realism and clear action over fake-looking oversized digits.
-- Do not turn all S1 episodes/clips into prompts in one S3 run. One S3 run means one target episode/clip, unless the user explicitly overrides with a batch scope.
-- Treat platform/API execution as S4, not S3.
+- 必须完整保留用户提供的原始台词。不要改写、删减、合并、调序，也不要改变说话人。
+- 如果原始台词很长，可以增加镜头，或把同一句话按顺序拆到连续镜头里，但必须保留原文顺序。
+- 如果原始台词有风险，主表仍保留原文，并在备注里给安全替代表达；不要静默替换。
+- 如果没有台词，写 `台词：无`；可选台词必须标注为可选。
+- 把抽象情绪转换为身体动作、微表情、运镜、声音和环境变化。
+- 每个镜头都必须包含：时间、镜头编号、景别、运镜、画面内容、动作、微表情、台词口型、声音、时长、本镜头作用、平台优化标签。
+- 每个镜头的声音必须使用这个格式：`台词：...；环境：...；SFX：...`。
+- 不要使用分屏、宫格、数字叠字、装饰性水印、无意义空镜、随机换脸、随机换装。
+- 如果用户提供带面板编号或宫格边框的分镜/联络表，这些编号和边框只能作为参考 ID。不要在视频提示词中复现面板标签、宫格、边框或联络表排版。
+- 不要把平台生成的可读手机 UI、银行页面、票据、合同或长文字当作观众理解剧情的唯一方式。如果必须出现可读文字，文字要短，风险要记录，剧情理解必须由人物动作和反应承担。
+- 关键金钱道具优先追求自然真实的道具感和清晰动作，不要做成夸张、假感很强的大数字。
+- 一次 S3 运行不要把所有 S1 分集/片段都转成提示词。一次 S3 运行只代表一个目标分集/片段，除非用户明确给出批量范围。
+- 平台/API 执行属于 S4，不属于 S3。
 
-## Long-Drama Mode
+## 长剧模式
 
-When `workflow_state.json.mode` is `long_drama`, S3 must consume the detailed S1 replica/second-creation descriptions instead of a compressed plot sentence:
+当 `workflow_state.json.mode` 为 `long_drama` 时，S3 必须读取详细的 S1 复刻/二创描述，而不是只根据压缩剧情句子写提示词：
 
-- Prefer `story_segments.json` episode fields `second_creation_description`, `replica_description`, `source_time_range`, and `duration_seconds`.
-- Use `second_creation_description.md` as the production truth source.
-- Use `source_replica_description.md` only to preserve reference visual structure.
-- Read `references/long_drama_reverse_prompt.md` and follow its emphasis on detailed image, action, expression, dialogue, camera, light, and atmosphere.
-- Generate prompts for exactly one target segment unless the user gives an explicit batch scope.
-- Preserve the chosen character age stage and S2 character reference for that segment.
-- Use `16:9 横屏` by default unless the user explicitly requests another final frame ratio.
-- If S2 generated images are provided, use the character/scene reference sheet to lock appearance and environment, and use the target storyboard panel only as a visual reference for that segment.
-- For image-to-video execution, require one clean first-frame image for the selected segment. Do not ask the user to feed a full contact sheet into the video tool unless the tool explicitly supports reference contact sheets.
-- Do not create or alter S1 replica descriptions here.
+- 优先使用 `story_segments.json` 中的 `second_creation_description`、`replica_description`、`source_time_range` 和 `duration_seconds` 字段。
+- 以 `second_creation_description.md` 作为生产真相源。
+- `source_replica_description.md` 只用于保留参考视频的视觉结构。
+- 读取 `references/long_drama_reverse_prompt.md`，并按其中要求强调画面、动作、表情、台词、镜头、光线和氛围的细节。
+- 除非用户明确给出批量范围，否则只生成一个目标片段。
+- 保留所选片段的角色年龄阶段和 S2 角色参考。
+- 默认使用 `16:9 横屏`，除非用户明确要求其他最终画幅。
+- 如果已经提供 S2 生成图片，使用角色/场景参考图锁定外貌和环境，只把目标分镜面板作为该片段的视觉参考。
+- 图生视频执行时，所选片段必须有一张干净首帧图。不要要求用户把完整联络表塞进视频工具，除非该工具明确支持联络表参考。
+- 不要在这里新建或修改 S1 复刻描述。
 
-## Required Output
+## 必需输出
 
-`motion_prompt_pack.md` must include:
+`motion_prompt_pack.md` 必须包含：
 
-- Target episode/clip ID and title
-- Character lock
-- Scene lock
-- Shot table
+- 目标分集/片段 ID 和标题
+- 角色锁定
+- 场景锁定
+- 分镜提示词表
 
-`platform_copy_ready_prompts.md` must include only copy-ready prompts for the selected episode/clip, grouped by platform, ready for manual paste into 即梦/可灵.
+`platform_copy_ready_prompts.md` 只能包含所选分集/片段的可复制提示词，按平台分组，并且可以直接手动粘贴到即梦/可灵。
 
-Primary S3 files must not include:
+S3 主输出文件中不要包含：
 
-- Workflow/V2 principles
-- Input source sections
-- Usage instructions
-- Compliance notes
-- Duration-analysis notes
-- Critical-prop risk analysis
-- Human confirmation sections
+- Workflow/V2 原则
+- 输入来源章节
+- 使用说明
+- 合规说明
+- 时长分析记录
+- 关键道具风险分析
+- 人工确认章节
 
-Put those notes in:
+这些说明统一放到：
 
 ```text
 artifacts/_meta/S3_motion_design_notes.md
 ```
 
-## Failure Modes
+## 失败模式
 
-| Trigger | Required action | Forbidden shortcut |
+| 触发情况 | 必须动作 | 禁止的偷懒做法 |
 | --- | --- | --- |
-| Target episode/clip is not specified | Use the first unfinished segment, usually `001`, and state that target in both outputs. | Do not generate all segments by default. |
-| User requests batch generation | Require an explicit target range and label it as a batch override. | Do not silently process every episode. |
-| Original dialogue is long | Split across continuous shots while preserving words and speaker order. | Do not summarize or rewrite dialogue. |
-| Plot depends on readable UI/text | Shift understanding to action/reaction and record text risk in `_meta`. | Do not trust platform-generated readable UI as the only story proof. |
-| Duration exceeds information density | Reduce to 5s/10s/10-12s according to the duration rules. | Do not stretch to 15s with filler reactions. |
-| S3 validator fails | Fix prompt structure before human approval. | Do not continue to S4 with invalid prompt files. |
+| 未指定目标分集/片段 | 使用第一个未完成片段，通常是 `001`，并在两个输出文件中写明目标。 | 默认生成所有片段。 |
+| 用户要求批量生成 | 要求用户给出明确目标范围，并标记为批量覆盖。 | 静默处理所有分集。 |
+| 原始台词很长 | 按原字词和说话人顺序拆到连续镜头中。 | 总结、改写或压缩台词。 |
+| 剧情依赖可读 UI/文字 | 把理解重心转移到动作/反应，并在 `_meta` 记录文字风险。 | 相信平台能稳定生成可读 UI，并把它当作唯一剧情证据。 |
+| 时长超过信息密度 | 按时长规则压缩到 5s / 10s / 10-12s。 | 用填充反应镜头硬拉到 15s。 |
+| S3 验证失败 | 先修正提示词结构，再给人工确认。 | 带着无效提示词继续进入 S4。 |
 
-## Anti-pattern Blacklist
+## 反模式黑名单
 
-- Do not call video APIs, upload assets, or claim generation happened.
-- Do not select generated videos or perform QC in S3.
-- Do not rewrite, omit, merge, reorder, or change speakers for original dialogue.
-- Do not use split-screen, grids, decorative watermarks, random face/costume changes, or empty filler shots.
-- Do not reproduce S2 storyboard panel numbers, grid borders, labels, or contact-sheet layouts in video prompts.
-- Do not put duration analysis, risk notes, source notes, or human-gate prose into primary S3 outputs.
-- Do not include more than one target episode/clip unless the user explicitly gave a batch scope.
+- 不要调用视频 API、上传素材，或声称已经生成视频。
+- 不要在 S3 里挑选生成视频或做质检。
+- 不要改写、删减、合并、调序原始台词，也不要改变说话人。
+- 不要使用分屏、宫格、装饰性水印、随机换脸/换装或空镜填充。
+- 不要在视频提示词中复现 S2 分镜面板编号、宫格边框、标签或联络表排版。
+- 不要把时长分析、风险说明、来源说明或人工闸门话术写进 S3 主输出。
+- 除非用户明确给出批量范围，否则不要在一次 S3 输出中包含多个目标分集/片段。
 
-## Commands
+## 命令
 
-Create S3 skeleton:
+创建 S3 骨架：
 
 ```bash
 python3 "$CODEX_SKILLS_ROOT/slbb-video-motion-prompts/scripts/scaffold_s3_run.py" <run_dir>
 ```
 
-Validate S3 outputs:
+验证 S3 输出：
 
 ```bash
 python3 "$CODEX_SKILLS_ROOT/slbb-video-motion-prompts/scripts/validate_s3_outputs.py" <run_dir>
 ```
 
-If `CODEX_SKILLS_ROOT` is not set, replace it with the local skills root.
+如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
 
-## Completion Gate
+## 完成闸门
 
-S3 is complete only when both required files exist for the selected episode/clip, validation passes, and the user has confirmed the prompts can be used for manual generation. S3 approval is a human decision.
+只有当所选分集/片段的两个必需文件都存在、验证通过，并且用户确认提示词可以用于人工生成时，S3 才算完成。S3 是否放行，是人工决策。

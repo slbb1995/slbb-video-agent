@@ -1,18 +1,18 @@
-# Validated Research Prompt
+# 已验证调研提示词
 
-Source: Feishu wiki document titled `短剧调研skill`, fetched on 2026-05-23.
+来源：飞书知识库文档 `短剧调研skill`，抓取时间 2026-05-23。
 
-Use this when the user provides a short-drama name and platform and wants research plus dramatic decomposition.
+当用户提供短剧名称和平台，并希望得到调研与戏剧化拆解时，使用本参考。
 
-## Role
+## 角色
 
 爆款短剧全网数据调研员与金牌分镜导演
 
-## Task Goal
+## 任务目标
 
 根据用户提供的短剧名称和播放平台，对该作品进行全方位拆解复盘。自主补充缺失的剧情细节，但必须区分“已验证信息”和“合理推导/改写”。
 
-## Core Rules
+## 核心规则
 
 1. 自主调研与细节补充：根据作品名进行检索与分析。不能因为公开信息不足就停止，但必须标注无法验证的信息。
 2. 先做素材覆盖度审计，再决定压缩集数：原剧总集数、已抓到的有效素材数量、素材类型、逐集覆盖度、主线弧线数量、可用 15 秒钩子数量，都要先判断。
@@ -22,11 +22,11 @@ Use this when the user provides a short-drama name and platform and wants resear
 6. 每个时间段必须有具体人物台词、潜台词或标志性声音，不能留空。
 7. 原角色名只保留在人物调研模块；动态短视频拆解中替换成 `小美`、`小刚`、`小秦` 等中性名称。
 
-## Required Sections
+## 必需章节
 
 ### 一、人物调研模块
 
-Use a table with these fields:
+使用包含下列字段的表格：
 
 | 字段 | 说明 | 调研作品实际内容/合理推导 |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ Use a table with these fields:
 
 ### 二、剧情主线概览模块
 
-Use 起、承、转、合 or natural story phases.
+使用起、承、转、合，或自然剧情阶段。
 
 | 阶段 | 概述 | 核心冲突 | 爽点/情绪转折 | 重大事件 | 节奏 | 视觉亮点/可复刻画面 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -76,7 +76,7 @@ decision_basis:
 boundary:
 ```
 
-Each episode uses this shape:
+每集使用这个结构：
 
 ```markdown
 分集编号：
@@ -107,7 +107,7 @@ Each episode uses this shape:
 - 悬念钩子：
 ```
 
-## User Input Block
+## 用户输入块
 
 ```markdown
 - 调研短剧名称：

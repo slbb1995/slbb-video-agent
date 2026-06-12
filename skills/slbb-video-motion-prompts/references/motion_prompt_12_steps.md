@@ -1,198 +1,198 @@
-# Motion Prompt 12-Step Reference
+# 生视频提示词 12 步参考
 
-Source: Feishu wiki document titled `剧情生视频提示词`, fetched on 2026-05-23.
+来源：飞书知识库文档 `剧情生视频提示词`，抓取时间 2026-05-23。
 
-Use this reference when generating S3 motion prompts.
+生成 S3 生视频提示词时使用本参考。
 
-## Role
+## 角色
 
 即梦短剧视频总导演 + 分镜师 + 表演指导 + 声音设计师 + 即梦平台提示词专家。
 
-Task: convert story, script, or standardized story fields into copy-ready short-drama video prompts. The output is a direct execution shot table, not a plot summary.
+任务：把故事、剧本或标准化剧情字段转换成可复制的短剧视频提示词。输出必须是可直接执行的分镜表，不是剧情总结。
 
-## Defaults
+## 默认值
 
-- Target duration: 15 seconds
-- Platform: 即梦
-- Aspect ratio: 9:16 vertical
-- Style: 写实、电影质感、真实人物比例、浅景深、轻微手持、真实生活光影
-- Character card: auto-complete minimal appearance card only when missing
-- Main perspective: conflict-bearing character
-- Trigger: sound, prop, eye contact, or key dialogue
-- Compliance: platform safety first
-- Forbidden elements: split grids, numeric overlays, borders, decorative watermarks, random face changes, random costume changes, meaningless empty shots
+- 目标时长：15 秒
+- 平台：即梦
+- 画幅：9:16 竖屏
+- 风格：写实、电影质感、真实人物比例、浅景深、轻微手持、真实生活光影
+- 角色卡：只有在缺失时，才自动补全最小必要外貌卡
+- 主视角：承载冲突的人物
+- 触发点：声音、道具、眼神接触或关键台词
+- 合规：平台安全优先
+- 禁止元素：分屏宫格、数字叠字、边框、装饰性水印、随机换脸、随机换装、无意义空镜
 
-## Highest Priority: Original Dialogue Protection
+## 最高优先级：保护原始台词
 
-1. Preserve user-provided plot line, relationships, key events, props, actions, and twists.
-2. Preserve all user-provided dialogue, narration, and inner monologue verbatim.
-3. Keep titles, tones, particles, pauses, punctuation, dialect flavor, repeated lines, catchphrases, and softened profanity because they may carry character and conflict.
-4. Optimize only shot split, shot size, camera movement, visual action, micro-expression, sound design, rhythm, scene dynamics, and compliant visual expression.
-5. If dialogue is too long, add shots, speed up rhythm, split long dialogue across continuous shots, reduce non-dialogue shots, or suggest extending duration.
-6. If dialogue is high-risk, use dual-track handling: keep the original in the main table and put safe alternatives in compliance notes unless the user explicitly asks for a safe version.
-7. If no dialogue is specified, write `台词：无`; optional lines must be labeled as optional.
-8. Before finishing, check every dialogue line against the source.
+1. 保留用户提供的剧情线、人物关系、关键事件、道具、动作和反转。
+2. 逐字保留用户提供的所有台词、旁白和内心独白。
+3. 保留称呼、语气、语气词、停顿、标点、方言味、重复句、口头禅和弱化脏话，因为它们可能承载人物和冲突。
+4. 只优化分镜拆分、景别、运镜、视觉动作、微表情、声音设计、节奏、场景调度和合规视觉表达。
+5. 如果台词太长，可以增加镜头、加快节奏、把长台词拆到连续镜头中、减少非台词镜头，或建议延长时长。
+6. 如果台词风险较高，采用双轨处理：主表保留原文，在合规备注里放安全替代表达；除非用户明确要求安全版。
+7. 如果没有指定台词，写 `台词：无`；可选台词必须标注为可选。
+8. 完成前，逐条核对台词是否和来源一致。
 
-## Genre Adaptation
+## 类型适配
 
-Choose the rhythm based on story type:
+根据故事类型选择节奏：
 
-- 都市情感 / 婚恋背叛: relationship mismatch, information gap, door-inside/outside, evasive eyes, pressure questioning, reaction close-ups.
-- 逆袭打脸: suppression, identity hint, evidence prop, contempt, calm counterattack before reveal.
-- 甜宠误会: closeness, misunderstanding, eye avoidance, heartbeat reaction, interruption.
-- 悬疑惊悚: sound trigger, clue close-up, spatial cover, door crack angle, abnormal action, unknown danger.
-- 古风权谋: status hierarchy, ritual pressure, lowered head and raised eyes, sleeves and tokens, palace-lamp shadow, restrained lines.
-- 农村家庭: lived-in rural texture, yard door, bucket, wooden door, window, low-voice testing, familiar pressure.
-- 职场商战: meeting room, documents, recording, PPT, eye contact, power relation, evidence twist.
-- 喜剧误会: rhythm mismatch, sudden displacement, exaggerated reaction, prop misuse, freeze on embarrassment.
-- 复仇爽剧: restraint, evidence, humiliation, calm expression before counterattack.
-- 家庭伦理: dinner table, living room, doorway, relatives watching, silent pressure, identity reveal, pause before outburst.
+- 都市情感 / 婚恋背叛：关系错位、信息差、门内门外、眼神闪躲、压迫追问、反应特写。
+- 逆袭打脸：压制、身份暗示、证据道具、轻蔑、揭露前的冷静反击。
+- 甜宠误会：意外靠近、误会、眼神躲避、心跳反应、第三方打断。
+- 悬疑惊悚：声音触发、线索特写、空间遮挡、门缝视角、异常动作、未知危险。
+- 古风权谋：身份等级、礼仪压迫、低头抬眼、袖口与信物、宫灯阴影、克制台词。
+- 农村家庭：真实乡村生活质感、院门、水桶、木门、窗户、低声试探、熟人压力。
+- 职场商战：会议室、文件、录音、PPT、眼神交锋、权力关系、证据反转。
+- 喜剧误会：节奏错位、突然位移、夸张反应、道具误用、尴尬定格。
+- 复仇爽剧：克制、证据、羞辱、反击前的平静表情。
+- 家庭伦理：饭桌、客厅、门口、亲戚围观、无声压力、身份揭露、爆发前停顿。
 
-## Shot Count
+## 镜头数量
 
-- 0-6 seconds: 2-4 shots
-- 7-15 seconds: 5-8 shots
-- 16-30 seconds: 7-12 shots
-- Over 30 seconds: usually 2-3 seconds per shot, with one emotional pause shot
-- If source dialogue is dense, exceed default shot count if needed, but never exceed 99 shots
+- 0-6 秒：2-4 个镜头
+- 7-15 秒：5-8 个镜头
+- 16-30 秒：7-12 个镜头
+- 超过 30 秒：通常每 2-3 秒一个镜头，并保留一个情绪停顿镜头
+- 如果原始台词密集，可以超过默认镜头数，但不要超过 99 个镜头
 
-## 12 Required Steps
+## 12 个必需步骤
 
-### 1. Character Lock Card
+### 1. 角色锁定卡
 
-For each major role:
+每个主要角色使用这个格式：
 
 ```text
 角色名（年龄 / 性别 / 身材 / 肤色 / 发型 / 脸型 / 五官 / 气质 / 服装 / 身份感 / 随身物）
 ```
 
-If user provides a role card, use it first. For continuous episodes, add:
+如果用户提供了角色卡，优先使用用户角色卡。连续分集要追加：
 
 ```text
 同一张脸、同一发型、同一服装、同一年龄感、同一身份气质，不随机换脸，不随机变装，不随机新增角色。
 ```
 
-### 2. Scene Lock Card
+### 2. 场景锁定卡
 
-Format:
+格式：
 
 ```text
 地点 / 时代环境 / 光线 / 镜头质感 / 道具 / 空间氛围
 ```
 
-Use the provided scene first. Key props must be visible and have at least one close-up or action sound.
+优先使用用户提供的场景。关键道具必须可见，并至少有一个特写或动作声音。
 
-### 3. Make Literary Plot Dynamic
+### 3. 把文学剧情变成动态画面
 
-Convert abstract emotion into:
+把抽象情绪转换为：
 
 ```text
 身体动作 + 微表情 + 运镜 + 声音 + 环境变化
 ```
 
-Examples:
+示例：
 
 - `他很慌` -> `喉结滚动，眼神闪躲，手停在半空，呼吸停顿半拍，镜头缓慢推进`
 - `她看穿了他` -> `手上动作瞬间停住，慢慢转头，视线锁死对方，距离迅速缩短`
 - `他很愤怒` -> `下颌绷紧，猛地向前一步，手背青筋顶起，镜头快速拉近`
 - `她很委屈` -> `鼻翼轻张，眼眶发红，嘴角下压，强忍不让眼泪掉下`
 
-Do not rewrite original dialogue.
+不要改写原始台词。
 
-### 4. Design Short-Drama Rhythm
+### 4. 设计短剧节奏
 
-For 15 seconds:
+15 秒视频参考节奏：
 
-- 0-3s: abnormal hook, guilty reaction, relationship mismatch, danger signal, or key prop
-- 3-8s: testing, entering space, covering up, prop trigger, or information gap
-- 8-12s: seeing through, pressure, escalation, or approaching twist
-- 12-15s: reaction close-up, unfinished action, or ending hook
+- 0-3s：异常钩子、心虚反应、关系错位、危险信号或关键道具
+- 3-8s：试探、进入空间、遮掩、道具触发或信息差
+- 8-12s：看穿、压迫、升级或接近反转
+- 12-15s：反应特写、未完成动作或结尾钩子
 
-Scale proportionally for other durations.
+其他时长按比例缩放。
 
-### 5. Select Viral Rhythm Template
+### 5. 选择爆款节奏模板
 
-Choose one:
+选择一种：
 
-1. 识破压迫型: abnormal opening -> testing -> seeing through -> pressure approach -> reaction close-up
-2. 打脸逆袭型: humiliation -> evidence/identity hint -> continued pressure -> calm counterattack hint -> stop before reveal
-3. 误会甜宠型: accidental closeness -> misunderstanding -> eye avoidance -> heartbeat reaction -> third-party interruption
-4. 悬疑线索型: abnormal sound -> clue discovery -> dangerous space -> clue points to someone -> turning back in shock
-5. 家庭爆发型: daily scene -> painful sentence -> suppressed emotion -> relationship tear -> stop before explosion
-6. 喜剧反差型: normal behavior -> sudden mismatch -> exaggerated reaction -> misunderstanding expands -> freeze
-7. 权谋压迫型: status pressure -> ritual movement -> hidden prop -> eye battle -> reversal line
+1. 识破压迫型：异常开场 -> 试探 -> 看穿 -> 压迫靠近 -> 反应特写
+2. 打脸逆袭型：羞辱 -> 证据/身份暗示 -> 继续压迫 -> 冷静反击暗示 -> 揭露前停住
+3. 误会甜宠型：意外靠近 -> 误会 -> 眼神躲避 -> 心跳反应 -> 第三方打断
+4. 悬疑线索型：异常声音 -> 发现线索 -> 危险空间 -> 线索指向某人 -> 震惊回头
+5. 家庭爆发型：日常场景 -> 刺痛一句话 -> 情绪压抑 -> 关系撕裂 -> 爆发前停住
+6. 喜剧反差型：正常行为 -> 突然错位 -> 夸张反应 -> 误会扩大 -> 定格
+7. 权谋压迫型：身份压迫 -> 礼仪动作 -> 暗藏道具 -> 眼神交锋 -> 反转台词
 
-### 6. Fill Required Fields Per Shot
+### 6. 填写每个镜头的必需字段
 
-Every shot must include:
+每个镜头必须包含：
 
 ```text
 时间 / 镜头 / 景别 / 运镜 / 画面内容 / 动作 / 微表情 / 台词口型 / 声音 / 时长 / 本镜头作用 / 平台优化标签
 ```
 
-### 7. Three-Layer Sound
+### 7. 三层声音
 
-Every shot sound field uses:
+每个镜头的声音字段使用：
 
 ```text
 台词：...；环境：...；SFX：...
 ```
 
-Use original dialogue verbatim. If no dialogue, write `台词：无`. Environment and SFX cannot be empty. Prefer breathing, footsteps, fabric friction, lock sounds, paper sounds, water, glass, keys, phone vibration, and low-frequency pressure ambience when relevant.
+原始台词必须逐字使用。没有台词时，写 `台词：无`。环境和 SFX 不能为空。根据场景优先使用呼吸声、脚步声、衣料摩擦声、门锁声、纸张声、水声、玻璃声、钥匙声、手机震动声、低频压迫氛围等。
 
-### 8. Lip Sync And Picture Sync
+### 8. 口型同步和画面同步
 
-Specify who speaks. Preserve source order. If multiple people speak in a shot, keep the original sequence. Put only speaker and words in the lip-sync field.
+明确谁在说话。保留来源顺序。如果一个镜头里多人说话，保持原始顺序。台词口型字段只写说话人和原话。
 
-### 9. Platform Adaptation
+### 9. 平台适配
 
-For 即梦:
+即梦适配：
 
-- Do not write long novel-like prompts.
-- Use short clauses separated by semicolons.
-- Put action before adjectives.
-- Each shot focuses on one core action and at most one secondary action.
-- Key shots prefer close-up, close shot, or extreme close-up.
-- If reference image, first frame, or end frame exists, state consistency explicitly.
-- Generate in shot order. No jumping back, split-screen, grids, number overlays, borders, or decorative watermarks.
+- 不写长篇小说式提示词。
+- 使用短句，并用分号分隔。
+- 动作放在形容词前面。
+- 每个镜头聚焦一个核心动作，最多再加一个次级动作。
+- 关键镜头优先使用特写、近景或极近景。
+- 如果有参考图、首帧或尾帧，明确说明保持一致。
+- 按镜头顺序生成。不要回跳，不要分屏，不要宫格，不要数字叠字，不要边框，不要装饰性水印。
 
-### 10. Compliance Rewrite
+### 10. 合规改写
 
-- Ambiguous intimacy: use distance, breath, gaze, slight clothing disorder, inside/outside-door information gap; avoid explicit body details.
-- Violence/blood: use pushing, stumbling, falling, object drop, door bang, gasp, shadow, pale face; avoid gore.
-- Minor-sensitive content: change to adult roles or stop.
-- Politics/public events/real people: use fictional institutions or stop when needed.
-- Infringement/privacy: remove real names, IDs, phone numbers, addresses, unauthorized likeness and voice.
+- 模糊亲密：使用距离、呼吸、眼神、轻微衣物凌乱、门内门外信息差；避免明确身体细节。
+- 暴力/血腥：使用推搡、踉跄、跌倒、物品掉落、关门撞击、倒吸气、阴影、脸色发白；避免血腥细节。
+- 未成年人敏感内容：改成成年人角色，或停止。
+- 政治/公共事件/真实人物：使用虚构机构，必要时停止。
+- 侵权/隐私：移除真实姓名、身份证、手机号、地址、未授权肖像和声音。
 
-Compliance rewrite changes visual expression, not original dialogue. If dialogue is risky, preserve it and add safe alternatives.
+合规改写只改视觉表达，不改原始台词。如果台词有风险，保留原文并补充安全替代方案。
 
-### 11. Strengthen Shot Hooks
+### 11. 强化镜头钩子
 
-Every 15-second video should contain at least two of:
+每条 15 秒视频至少包含以下两类钩子：
 
-- Visual hook: abnormal action, key prop, sudden appearance, door-lock sound, strange eye contact
-- Emotional hook: guilt, grievance, anger, pressure, cold smile, collapse, restraint
-- Ending hook: reaction close-up, unfinished action, door about to open, evidence about to appear, identity about to be revealed
+- 视觉钩子：异常动作、关键道具、突然出现、门锁声、奇怪眼神接触
+- 情绪钩子：心虚、委屈、愤怒、压迫、冷笑、崩溃、克制
+- 结尾钩子：反应特写、未完成动作、门即将打开、证据即将出现、身份即将揭露
 
-No meaningless empty shots.
+不要使用无意义空镜。
 
-### 12. Pre-Output Validation
+### 12. 输出前验证
 
-Check:
+检查：
 
-- Total duration equals target duration.
-- Every shot field is complete.
-- Every shot has sound.
-- Character locks are consistent.
-- User original dialogue is fully preserved.
-- No rewriting, deletion, omission, merge, or speaker change.
-- Platform optimization tags are not empty.
-- Compliance check passes.
-- Total shots do not exceed 99.
-- Table cells should be compact; avoid newlines inside cells.
-- Final shot creates reaction close-up, unfinished action, or next-episode hook.
+- 总时长等于目标时长。
+- 每个镜头字段完整。
+- 每个镜头都有声音。
+- 角色锁定一致。
+- 用户原始台词已经完整保留。
+- 没有改写、删除、遗漏、合并台词，也没有改变说话人。
+- 平台优化标签不为空。
+- 合规检查通过。
+- 总镜头数不超过 99。
+- 表格单元格应保持紧凑，避免单元格内换行。
+- 最后一个镜头形成反应特写、未完成动作或下一集钩子。
 
-## Required Output Shape
+## 必需输出形态
 
 ```text
 角色锁定：...
@@ -200,4 +200,4 @@ Check:
 | 时间 | 镜头 | 景别 | 运镜 | 画面内容 | 动作 | 微表情 | 台词口型 | 声音 | 时长 | 本镜头作用 | 平台优化标签 |
 ```
 
-Do not add unrelated explanation inside the copy-ready prompt.
+不要在可复制提示词里加入无关解释。

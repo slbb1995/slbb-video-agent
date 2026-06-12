@@ -1,10 +1,10 @@
-# Standard Decomposition Framework
+# 标准剧情拆解框架
 
-Source: Feishu wiki document titled `拆解剧情标准化框架`, fetched on 2026-05-23.
+来源：飞书知识库文档 `拆解剧情标准化框架`，抓取时间 2026-05-23。
 
-Use this when the user provides raw plot text or an already researched drama and needs S1 story extraction and segmentation.
+当用户提供原始剧情文本，或已经完成调研的短剧，并需要 S1 剧情提取与分集拆分时，使用本参考。
 
-## Character Research
+## 人物调研
 
 | 字段 | 说明 | 输出要求 |
 | --- | --- | --- |
@@ -21,14 +21,14 @@ Use this when the user provides raw plot text or an already researched drama and
 | 情绪曲线 | 角色在剧情中情绪变化 | 用箭头连接 |
 | 角色关系 | 与其他角色关系 | 写利益、感情、冲突 |
 
-## Main Plot Overview
+## 剧情主线概览
 
-Rules:
+规则：
 
-- Divide the story by complete narrative movement. Use 起承转合 when suitable.
-- Every phase must include overview, core conflict, emotional turn, major event, rhythm, and reproducible visual image.
-- Phase count can vary by story length.
-- Keep logic continuous so S2/S3 can convert the output into image and video prompts.
+- 按完整叙事运动划分故事。适合时使用起承转合。
+- 每个阶段都必须包含概述、核心冲突、情绪转折、重大事件、节奏和可复刻视觉画面。
+- 阶段数量可以随故事长度变化。
+- 保持逻辑连续，方便 S2/S3 把输出转换成图片和视频提示词。
 
 | 阶段 | 概述 | 核心冲突 | 爽点/转折 | 重大事件 | 节奏 | 亮点/可复刻画面 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -37,50 +37,50 @@ Rules:
 | 转 |  |  |  |  |  |  |
 | 合 |  |  |  |  |  |  |
 
-## One-Sentence Summary
+## 一句话简介
 
 ```text
 一句话简介：
 ```
 
-The sentence should include role contrast, conflict, emotional hook, and suspense.
+这句话应包含角色反差、核心冲突、情绪钩子和悬念。
 
-## Dynamic 15-Second Segmentation
+## 动态 15 秒分集拆分
 
-Before writing any 15-second episode, decide the segment count from source coverage. Do not choose a fixed count first.
+写任何 15 秒分集前，先根据来源覆盖决定片段数量。不要先固定数量。
 
-Write the decision to `artifacts/_meta/S1_segmentation_decision.md` with:
+把决策写入 `artifacts/_meta/S1_segmentation_decision.md`，包含：
 
-- `source_type`: researched / provided / inferred.
-- `original_episode_count`: known source episode count, if available.
-- `collected_source_count`: number of usable collected source items.
-- `material_types`: full transcript, episode synopsis, official synopsis, platform clips, user notes, search snippets, etc.
-- `coverage_level`: high / medium / low.
-- `target_segment_count`: exact number of compressed 15-second units.
-- `decision_basis`: why this count fits the drama.
-- `boundary`: full-series reconstruction, compressed adaptation, sample-only inferred segmentation, or blocked.
+- `source_type`：researched / provided / inferred
+- `original_episode_count`：已知原剧集数
+- `collected_source_count`：可用来源素材数量
+- `material_types`：完整字幕、分集梗概、官方梗概、平台片段、用户笔记、搜索摘要等
+- `coverage_level`：high / medium / low
+- `target_segment_count`：压缩后的 15 秒单元准确数量
+- `decision_basis`：为什么这个数量适合这部剧
+- `boundary`：整季重构、压缩改编、样本级推断拆分，或 blocked
 
-Flexible judgment rules:
+弹性判断规则：
 
-- If full episode-level story coverage exists, compress by story arcs and effective hooks, not by a fixed ratio.
-- If only official synopsis and scattered clips exist, output a sample/inferred segmentation and say so in `_meta`; do not claim it is full-series coverage.
-- For a long short drama such as 40-80 source episodes, the final 15-second unit count may plausibly be 12, 18, 24, or more depending on plot density, but the number must come from the source audit.
-- A segment exists only when it can carry a clear hook, conflict escalation, and ending hook. Do not add filler segments to hit a target count.
-- If source materials show more arcs than the chosen count can hold, increase the count or mark the compression as a sample.
-- If source coverage is too thin to justify the count, block for more source material instead of inventing a full season.
+- 如果已有完整到分集级的故事覆盖，按叙事弧和有效钩子压缩，不按固定比例。
+- 如果只有官方梗概和零散片段，输出样本/推断拆分，并在 `_meta` 说明；不要声称是整季覆盖。
+- 对 40-80 集这种长短剧，最终 15 秒单元数可能是 12、18、24 或更多，取决于剧情密度，但必须来自来源审计。
+- 一个片段必须能承载清楚的钩子、冲突升级和结尾钩子。不要为了凑数量增加填充片段。
+- 如果来源素材显示的叙事弧超过当前数量能承载的范围，就增加数量，或把压缩标为样本。
+- 如果来源覆盖太薄，无法支撑该数量，阻塞并要求更多来源素材，不要编造整季。
 
-Rules:
+规则：
 
-1. Each short video episode is 15 seconds.
-2. Opening 2 seconds must contain a visual hook or strong action.
-3. Middle 5-10 seconds must contain a second conflict or unexpected escalation.
-4. Ending 3 seconds must contain a suspense hook.
-5. Episodes are dynamic; do not force a fixed count.
-6. Each episode must include scene, people, psychology, action, dialogue, props, environment, and audio-visual rhythm.
-7. Use replacement character names in episodes. Keep original names only in research.
-8. If the last episode is shorter in story content, still write a complete 15-second dramatic unit.
+1. 每条短视频分集为 15 秒。
+2. 开头 2 秒必须包含视觉钩子或强动作。
+3. 中间 5-10 秒必须包含第二冲突或意外升级。
+4. 结尾 3 秒必须包含悬念钩子。
+5. 分集数量是动态的，不要强制固定。
+6. 每集必须包含场景、人物、心理、动作、台词、道具、环境和视听节奏。
+7. 分集里使用替换角色名，原名只保留在调研部分。
+8. 如果最后一集故事内容更短，仍然写成完整的 15 秒戏剧单元。
 
-Episode template:
+分集模板：
 
 ```markdown
 分集编号：
@@ -112,11 +112,11 @@ Episode template:
 钩子：
 ```
 
-## Rewrite And Copyright Risk Notes
+## 改写与版权风险记录
 
-Add a section that separates:
+增加一个章节，分开说明：
 
-- Directly sourced plot facts.
-- Inferred or reconstructed details.
-- Original rewritten details.
-- Lines or scenes that are too close to the source and should be rewritten before downstream prompting.
+- 直接来自来源的剧情事实。
+- 推断或重构的细节。
+- 原创改写的细节。
+- 与来源过近、下游提示词前需要改写的台词或场景。

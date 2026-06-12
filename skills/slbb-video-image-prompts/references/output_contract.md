@@ -1,12 +1,12 @@
-# S2 Output Contract
+# S2 输出契约
 
-S2 is a workflow node. It is not complete until the image prompt pack exists and validates.
+S2 是工作流节点。只有图片提示词包存在并验证通过，S2 才算完成。
 
-`image_prompt_pack.md` is a clean prompt pack. It is read by humans and by S3, so it must contain only usable image prompts. Workflow principles, route choice, inference/risk notes, and human-gate notes belong in `artifacts/_meta/S2_prompt_notes.md`.
+`image_prompt_pack.md` 是干净提示词包。人工和 S3 都会读取它，所以它只能包含可用图片提示词。工作流原则、路线选择、推断/风险说明和人工闸门说明都放到 `artifacts/_meta/S2_prompt_notes.md`。
 
-For `long_drama` mode, the same output file is used. The pack must support multiple age-stage character references when S1 identifies one person across childhood, youth, adult, or elderly stages. Keep the prompt pack clean; put continuity explanations or inferred-risk notes in `_meta/S2_prompt_notes.md`.
+`long_drama` 模式也使用同一个输出文件。如果 S1 识别出同一人物的童年、青年、成年或老年阶段，提示词包必须支持多年龄阶段角色参考。保持提示词包干净；连续性说明或推断风险放到 `_meta/S2_prompt_notes.md`。
 
-## Required Directory
+## 必需目录
 
 ```text
 <run_dir>/
@@ -14,12 +14,12 @@ For `long_drama` mode, the same output file is used. The pack must support multi
     S2/
       image_prompt_pack.md
     _meta/
-      S2_prompt_notes.md # optional
+      S2_prompt_notes.md # 可选
 ```
 
 ## image_prompt_pack.md
 
-Must include these headings:
+必须包含这些标题：
 
 ```markdown
 # S2 图片提示词包
@@ -29,35 +29,35 @@ Must include these headings:
 ## 首图提示词
 ```
 
-## Required Quality Signals
+## 必需质量信号
 
-The finished pack must contain:
+最终提示词包必须包含：
 
-- `白底三视图` in the character reference section.
-- Character reference prompts must explicitly say each role is generated as one image/canvas/frame containing three full-body side-by-side views: `正面`, `侧面`, and `背面`.
-- Character reference prompts must include `16:9 横向宽画布`; character sheets are reference assets and do not follow the final video frame ratio.
-- Character reference prompts must match the reference-photo standard: left-to-right front / true side profile / back order, head-to-toe full body, same scale and height, neutral upright standing pose, and no crop.
-- Character reference prompts must explicitly reject single-view output, e.g. `不是单张正面照` or `禁止只生成正面人物照`.
-- `无人物` in the scene reference section.
-- `短剧截图` or `短剧视频的开头首帧画面` in the first-frame section.
-- Scene reference and first-frame prompts must include the mode-specific frame ratio:
-  - `short_drama`: `9:16 竖屏`
-  - `long_drama`: `16:9 横屏`
-- `无文字`, `无水印`, and `无logo`.
+- 人物参考章节包含 `白底三视图`。
+- 角色参考提示词必须明确说明：每个角色生成成一张图片/画布/画面，其中包含三张并排全身视图：`正面`、`侧面` 和 `背面`。
+- 角色参考提示词必须包含 `16:9 横向宽画布`；角色图是参考资产，不跟随最终视频画幅。
+- 角色参考提示词必须符合参考照标准：从左到右正面 / 真实侧面 / 背面，从头到脚全身，相同比例和高度，自然直立站姿，不裁切。
+- 角色参考提示词必须明确拒绝单视角输出，例如 `不是单张正面照` 或 `禁止只生成正面人物照`。
+- 场景参考章节包含 `无人物`。
+- 首帧章节包含 `短剧截图` 或 `短剧视频的开头首帧画面`。
+- 场景参考和首帧提示词必须包含对应模式画幅：
+  - `short_drama`：`9:16 竖屏`
+  - `long_drama`：`16:9 横屏`
+- `无文字`、`无水印` 和 `无logo`。
 
-For long-drama runs, the finished pack should also contain:
+长剧 run 的最终提示词包还应包含：
 
-- separate prompts for each required age-stage character reference.
-- continuity language when multiple age stages are the same person.
-- first-frame prompts for segments that change age stage, scene, or emotional state.
+- 每个必需年龄阶段的独立角色参考提示词。
+- 同一人物跨多个年龄阶段时的连续性表述。
+- 针对年龄阶段、场景或情绪状态变化片段的首帧提示词。
 
-The pack must not contain unfinished placeholders such as:
+提示词包不得包含未完成占位符：
 
 - `TODO`
 - `待填写`
 - `待补充`
 
-The pack must not contain process/noise markers:
+提示词包不得包含过程噪音标记：
 
 - `Workflow` / `workflow`
 - `V2 原则`

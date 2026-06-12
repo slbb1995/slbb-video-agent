@@ -1,10 +1,10 @@
-# S5 Output Contract
+# S5 输出契约
 
-S5 is a workflow node. It is not complete until all required artifacts exist and validate.
+S5 是工作流节点。只有所有必需产物都存在并验证通过，S5 才算完成。
 
-S5 primary outputs are clean QC deliverables for S6 or upstream rework. Long review notes and human-gate wording belong in `artifacts/_audit/S5_review_notes.md`.
+S5 主输出是给 S6 或上游返工使用的干净质检交付物。长审查笔记和人工闸门话术放到 `artifacts/_audit/S5_review_notes.md`。
 
-## Required Directory
+## 必需目录
 
 ```text
 <run_dir>/
@@ -14,12 +14,12 @@ S5 primary outputs are clean QC deliverables for S6 or upstream rework. Long rev
       qc_verdict.json
       rework_suggestions.md
     _audit/
-      S5_review_notes.md # optional
+      S5_review_notes.md # 可选
 ```
 
 ## qc_report.md
 
-Required headings:
+必需标题：
 
 ```markdown
 # S5 视频质检报告
@@ -32,7 +32,7 @@ Required headings:
 
 ## qc_verdict.json
 
-Required shape:
+必需结构：
 
 ```json
 {
@@ -75,11 +75,11 @@ Required shape:
 }
 ```
 
-If `verdict` is `needs_rework` or `reject`, at least one issue is required.
+如果 `verdict` 为 `needs_rework` 或 `reject`，至少需要一个问题。
 
 ## rework_suggestions.md
 
-Required headings:
+必需标题：
 
 ```markdown
 # S5 返工建议
@@ -90,9 +90,9 @@ Required headings:
 ## 进入下一步条件
 ```
 
-## Clean Output Guard
+## 干净输出保护
 
-Primary Markdown outputs must not include:
+主 Markdown 输出不得包含：
 
 - `Workflow` / `workflow`
 - `V2 原则`

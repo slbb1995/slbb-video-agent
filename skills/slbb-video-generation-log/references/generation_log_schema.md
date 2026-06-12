@@ -1,8 +1,8 @@
-# S4 Generation Log Schema
+# S4 视频生成日志结构
 
-S4 records manual platform execution. It does not generate videos.
+S4 记录人工平台执行结果。它不生成视频。
 
-## Required Files
+## 必需文件
 
 ```text
 <run_dir>/
@@ -14,7 +14,7 @@ S4 records manual platform execution. It does not generate videos.
 
 ## generation_run_log.md
 
-Required headings:
+必需标题：
 
 ```markdown
 # S4 视频生成记录
@@ -27,48 +27,48 @@ Required headings:
 
 ## generation_run_log.csv
 
-Required columns:
+必需列：
 
 ```csv
 record_id,clip_id,episode_id,platform,generation_mode,prompt_ref,reference_assets,settings,output_ref,status,selected_for_qc,failure_reason,created_at,operator_notes
 ```
 
-Column meaning:
+列含义：
 
-- `record_id`: unique attempt id, for example `s4-001`
-- `clip_id`: clip or prompt group id, for example `clip-001`
-- `episode_id`: source episode id from S1/S3
-- `platform`: 即梦, 可灵, or other
-- `generation_mode`: text-to-video, image-to-video, video-to-video, or other
-- `prompt_ref`: file path, prompt id, or copied prompt reference
-- `reference_assets`: image/video asset paths or URLs used by the platform
-- `settings`: platform settings such as duration, aspect ratio, model, seed, style
-- `output_ref`: generated video path, URL, platform id, or explicit failure note
-- `status`: success, failed, selected, rejected, retry_needed
-- `selected_for_qc`: yes/no
-- `failure_reason`: required when status is failed or retry_needed
-- `created_at`: timestamp or manual date
-- `operator_notes`: human notes
+- `record_id`：唯一尝试 ID，例如 `s4-001`
+- `clip_id`：片段或提示词组 ID，例如 `clip-001`
+- `episode_id`：来自 S1/S3 的来源分集 ID
+- `platform`：即梦、可灵或其他
+- `generation_mode`：text-to-video、image-to-video、video-to-video 或 other
+- `prompt_ref`：文件路径、提示词 ID 或复制版提示词引用
+- `reference_assets`：平台使用的图片/视频资产路径或 URL
+- `settings`：平台设置，例如时长、画幅、模型、seed、风格
+- `output_ref`：生成视频路径、URL、平台 ID 或明确失败说明
+- `status`：success、failed、selected、rejected、retry_needed
+- `selected_for_qc`：yes/no
+- `failure_reason`：当 status 为 failed 或 retry_needed 时必填
+- `created_at`：时间戳或人工日期
+- `operator_notes`：人工备注
 
-## Completion Rule
+## 完成规则
 
-At least one CSV row must have:
+至少一行 CSV 必须包含：
 
 ```text
 selected_for_qc = yes
 ```
 
-or:
+或：
 
 ```text
 status = selected
 ```
 
-Without a selected video/version, S4 can be useful as a log, but it is not complete for the workflow.
+没有选中的视频/版本时，S4 日志仍有价值，但对工作流来说还未完成。
 
-## Clean Output Guard
+## 干净输出保护
 
-`generation_run_log.md` must not include:
+`generation_run_log.md` 不得包含：
 
 - `Workflow` / `workflow`
 - `V2 原则`

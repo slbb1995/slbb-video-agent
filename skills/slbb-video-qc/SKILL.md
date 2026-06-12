@@ -1,27 +1,27 @@
 ---
 name: slbb-video-qc
-description: AI 短剧/长剧 S5 视频质检与问题归因。Use when the user has generated video clips from 即梦, 可灵, or another platform and needs to inspect characters, deformation, action, lighting, expression, camera stability, subtitles/text glitches, story fidelity, long-drama character continuity, platform artifacts, and infer whether problems come from S1 story split/replica description, S2 image prompts, S3 motion prompts, S4 generation settings/platform, or should move to S6 editing. Trigger for “视频质检”, “视频审查”, “长剧连续性质检”, “质检表”, “Gemini质检”, “抽帧检查”, “人物变形”, “动作不合适”, “光线问题”, “字幕乱码”, “反推提示词问题”, or S5 artifacts in the slbb-video workflow.
+description: AI 短剧/长剧 S5 视频质检与问题归因。当用户已经用即梦、可灵或其他平台生成视频片段，需要检查人物、变形、动作、光线、表情、镜头稳定、字幕/文字异常、剧情还原度、长剧角色连续性、平台生成瑕疵，并判断问题来自 S1 剧情拆分/复刻描述、S2 图片提示词、S3 生视频提示词、S4 生成设置/平台，还是应进入 S6 剪辑修正时使用。触发词包括“视频质检”“视频审查”“长剧连续性质检”“质检表”“Gemini质检”“抽帧检查”“人物变形”“动作不合适”“光线问题”“字幕乱码”“反推提示词问题”，以及 slbb-video 工作流中的 S5 产物。
 ---
 
 # AI 短剧 S5：视频质检
 
-## Overview
+## 概览
 
-Use this skill to turn a generated video, frame observations, human notes, or vision-model notes into a QC report, machine-readable verdict, and rework suggestions.
+这个技能用来把生成视频、抽帧观察、人工笔记或视觉模型笔记，转换成质检报告、机器可读结论和返工建议。
 
-S5 does not pick a permanent video-understanding model in the first version. It can use human review, extracted frames, Gemini, or any available vision/video model, but it must record the review method and model used.
+S5 第一版不固定某一个视频理解模型。它可以使用人工审查、抽帧、Gemini 或任何可用的视觉/视频模型，但必须记录审查方法和使用的模型。
 
-## Operating Gates
+## 执行闸门
 
-- 🔴 CHECKPOINT: before QC begins, identify the selected S4 generated video/version or mark `blocked_no_video`.
-- 🔴 CHECKPOINT: before sending anything to S6, decide whether each important issue is `edit_safe`, `edit_precise_only`, `regenerate_required`, or `accept_or_defer`.
-- 🔴 CHECKPOINT: before completing S5, the user must confirm the verdict: pass to S6, route upstream, or stop.
-- 🛑 STOP: if no video/frame/user evidence exists, output `blocked_no_video` instead of guessing.
-- 🛑 STOP: if a core prop/story issue would look fake after editing, route back to S2/S3/S4 instead of forcing S6.
+- 红色检查点：开始质检前，必须识别 S4 选中的生成视频/版本；否则标记为 `blocked_no_video`。
+- 红色检查点：发送任何内容到 S6 之前，必须判断每个重要问题是 `edit_safe`、`edit_precise_only`、`regenerate_required` 还是 `accept_or_defer`。
+- 红色检查点：完成 S5 前，用户必须确认结论：通过到 S6、回到上游，或停止。
+- 停止：如果没有视频/帧/用户证据，输出 `blocked_no_video`，不要猜。
+- 停止：如果核心道具或剧情问题剪辑后会更假，回到 S2/S3/S4，不要强行进入 S6。
 
-## Inputs
+## 输入
 
-Prefer workflow artifacts:
+优先使用工作流产物：
 
 ```text
 artifacts/S1/story_extract.md
@@ -33,105 +33,105 @@ artifacts/S4/generation_run_log.md
 artifacts/S4/generation_run_log.csv
 ```
 
-Also accept:
+也可以接受：
 
-- Video file path or URL
-- Extracted frame folder
-- Human issue notes
-- Gemini/vision-model review text
-- Selected generation record from S4
+- 视频文件路径或 URL
+- 抽帧文件夹
+- 人工问题笔记
+- Gemini/视觉模型审查文本
+- S4 选中的生成记录
 
-## Workflow
+## 工作流程
 
-1. Create S5 skeleton:
+1. 创建 S5 骨架：
    ```bash
    python3 "$CODEX_SKILLS_ROOT/slbb-video-qc/scripts/scaffold_s5_run.py" <run_dir>
    ```
-2. Inspect S4 and identify the selected generated video/version.
-3. Review the video using the best available method:
-   - Human observation
-   - Extracted key frames
-   - Gemini or another video-capable model
-   - Existing user-provided QC notes
-4. Add issues using:
+2. 检查 S4，识别选中的生成视频/版本。
+3. 使用当前最可靠的方法审查视频：
+   - 人工观察
+   - 抽取关键帧
+   - Gemini 或其他支持视频的模型
+   - 用户已经提供的质检笔记
+4. 使用脚本添加问题：
    ```bash
    python3 "$CODEX_SKILLS_ROOT/slbb-video-qc/scripts/add_qc_issue.py" <run_dir> --category character_consistency --severity high --timestamp "0:04-0:06" --observation "人物脸变形" --likely-source-step S2 --recommendation "重做人物参考图并锁定角色"
    ```
-5. Write `qc_report.md`, `qc_verdict.json`, and `rework_suggestions.md`.
-   - Keep primary S5 files actionable: conclusion, issue evidence, attribution, editability, and rework action.
-   - Put review-method details, model notes, long frame observations, and human-gate wording in `artifacts/_audit/S5_review_notes.md` if needed.
-6. Validate:
+5. 写入 `qc_report.md`、`qc_verdict.json` 和 `rework_suggestions.md`。
+   - S5 主文件要可执行：结论、问题证据、归因、可修性、返工动作。
+   - 审查方法细节、模型说明、长抽帧观察和人工闸门话术，如有需要放到 `artifacts/_audit/S5_review_notes.md`。
+6. 验证：
    ```bash
    python3 "$CODEX_SKILLS_ROOT/slbb-video-qc/scripts/validate_s5_outputs.py" <run_dir>
    ```
-7. Stop at the human gate. Do not continue to S6 until the user confirms the QC verdict.
+7. 停在人工闸门。用户确认质检结论前，不要继续进入 S6。
 
-If `CODEX_SKILLS_ROOT` is not set, replace it with the local skills root.
+如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
 
-## QC Categories
+## 质检类别
 
-Use `references/qc_standard.md`.
+使用 `references/qc_standard.md`。
 
-Required checks:
+必查项：
 
-- Character consistency
-- Face/body deformation
-- Action correctness
-- Expression and emotion
-- Lighting and color
-- Camera stability
-- Scene and prop consistency
-- Dialogue/lip-sync/story fidelity
-- Subtitle/text glitches
-- Platform artifacts
-- Compliance and safety
+- 角色一致性
+- 面部/身体变形
+- 动作正确性
+- 表情和情绪
+- 光线和色彩
+- 镜头稳定性
+- 场景和道具一致性
+- 台词/口型/剧情还原
+- 字幕/文字异常
+- 平台生成瑕疵
+- 合规与安全
 
-For `long_drama` mode, also check:
+`long_drama` 模式还要检查：
 
-- Same-person identity continuity across segments and age stages
-- Whether age-stage changes are intentional and visually plausible
-- Clothing, prop, and scene continuity inside the current story section
-- Emotional continuity between the current segment and adjacent segments
-- Whether the selected generated clip can be edited into the larger 2-minute story without breaking rhythm
+- 跨片段、跨年龄阶段的同一人物身份连续性
+- 年龄阶段变化是否有意图且视觉合理
+- 当前故事段落内的服装、道具、场景连续性
+- 当前片段和相邻片段之间的情绪连续性
+- 所选生成片段是否能剪进更大的 2 分钟故事里，并且不破坏节奏
 
-## Attribution Rules
+## 归因规则
 
-Every issue must be mapped to one likely source:
+每个问题都必须映射到一个最可能来源：
 
-- `S1`: story split, character relation, scene logic, or episode rhythm problem
-- `S1_long_replica`: long-drama source replica, second-creation description, role age-stage, or segment split problem
-- `S2`: image prompt, character reference, scene reference, first-frame problem
-- `S3`: motion prompt, shot table, action, sound, dialogue, platform prompt problem
-- `S4`: platform setting, generation attempt, selected version, upload/reference mismatch
-- `S6`: only editing/subtitle/covering/cut can fix it
-- `platform`: model artifact that requires regeneration
-- `unknown`: not enough evidence; ask for more frames/video
+- `S1`：剧情拆分、人物关系、场景逻辑或分集节奏问题
+- `S1_long_replica`：长剧来源复刻、二创描述、角色年龄阶段或片段拆分问题
+- `S2`：图片提示词、角色参考、场景参考、首帧问题
+- `S3`：生视频提示词、分镜表、动作、声音、台词、平台提示词问题
+- `S4`：平台设置、生成尝试、选中版本、上传/参考不匹配
+- `S6`：只有剪辑、字幕、遮挡或裁切能修
+- `platform`：需要重新生成的平台模型瑕疵
+- `unknown`：证据不足，需要更多帧/视频
 
-Do not write vague feedback. Use this shape:
+不要写模糊反馈。使用这个结构：
 
 ```text
 问题 -> 证据 -> 可能来源 -> 建议返工环节
 ```
 
-## S6 Editability Gate
+## S6 可修性闸门
 
-S5 must decide whether each issue is actually suitable for S6. Do not send every problem to editing just because an editing tool exists.
+S5 必须判断每个问题是否真的适合进入 S6。不要因为存在剪辑工具，就把所有问题都推给剪辑。
 
-Use one of these labels for important issues:
+重要问题使用这些标签之一：
 
-- `edit_safe`: editing can fix it naturally, e.g. trim, audio level, simple subtitle cover.
-- `edit_precise_only`: only careful manual/precision editing may work; rough automatic repair likely looks worse.
-- `regenerate_required`: the issue must return to S2/S3/S4, e.g. fake core prop, broken action logic, face/identity failure, unreadable plot-critical UI.
-- `accept_or_defer`: visible issue exists but can be accepted for this test because fixing it costs more or makes it worse.
+- `edit_safe`：剪辑可以自然修复，例如裁剪、音量、简单字幕遮挡。
+- `edit_precise_only`：只有精细人工剪辑可能有效；粗糙自动修复大概率更糟。
+- `regenerate_required`：必须回到 S2/S3/S4，例如核心道具假、动作逻辑坏、脸/身份失败、剧情关键 UI 不可读。
+- `accept_or_defer`：问题可见，但本轮测试可以接受，因为修复成本更高或会更糟。
 
-For plot-critical props such as phone payment screens, bank numbers, cash, bills, contracts, and identity documents, S5 must explicitly answer:
+对手机付款页、银行数字、现金、票据、合同、身份证件等剧情关键道具，S5 必须明确回答：
 
-- Is this core爽点 still understandable?
-- Would S6 repair look more fake than the original?
-- Is the minimum acceptable fix audio/trim only?
-- Should this go back to generation instead of editing?
+- 这个核心爽点还能不能看懂？
+- S6 修复是否会比原问题更假？
+- 最低可接受修复是不是只做音频/裁剪？
+- 是否应该回到生成，而不是剪辑？
 
-## Required Outputs
+## 必需输出
 
 ```text
 artifacts/S5/qc_report.md
@@ -139,30 +139,30 @@ artifacts/S5/qc_verdict.json
 artifacts/S5/rework_suggestions.md
 ```
 
-See `references/output_contract.md` for schemas.
+结构见 `references/output_contract.md`。
 
-Primary S5 outputs must not read like a workflow memo. They should answer: usable or not, what is wrong, why it happened, where to return, and whether S6 can safely fix it.
+S5 主输出不要写成工作流备忘录。它应该回答：能不能用、哪里错、为什么错、该回到哪里、S6 能不能安全修。
 
-## Failure Modes
+## 失败模式
 
-| Trigger | Required action | Forbidden shortcut |
+| 触发情况 | 必须动作 | 禁止的偷懒做法 |
 | --- | --- | --- |
-| No selected video/version | Set verdict to `blocked_no_video` and route back to S4. | Do not QC an unspecified video. |
-| Only screenshots/frames are available | Record method and confidence, then limit conclusions to visible evidence. | Do not infer invisible motion or audio. |
-| Core prop is fake or unreadable | Decide whether the story still works; if not, route to S2/S3/S4. | Do not send every prop issue to S6. |
-| Face/identity/action logic fails | Mark `regenerate_required` unless editing can naturally fix it. | Do not cover conceptual generation failure with edits. |
-| Review method/model is unknown | Record `notes_only` or ask for method details. | Do not hide review uncertainty. |
-| Validator fails | Fix report, JSON, or rework output before human confirmation. | Do not continue to S6 with invalid verdict data. |
+| 没有选中视频/版本 | 把结论设为 `blocked_no_video`，并回到 S4。 | 质检一个未指定视频。 |
+| 只有截图/帧可用 | 记录方法和置信度，并把结论限制在可见证据内。 | 推断不可见的运动或音频。 |
+| 核心道具假或不可读 | 判断故事是否仍能成立；不成立就回到 S2/S3/S4。 | 把每个道具问题都推给 S6。 |
+| 脸/身份/动作逻辑失败 | 除非剪辑能自然修复，否则标记 `regenerate_required`。 | 用剪辑掩盖概念性生成失败。 |
+| 审查方法/模型未知 | 记录为 `notes_only`，或要求补充方法细节。 | 隐藏审查不确定性。 |
+| 验证失败 | 先修报告、JSON 或返工输出，再进入人工确认。 | 带着无效结论继续进入 S6。 |
 
-## Anti-pattern Blacklist
+## 反模式黑名单
 
-- Do not treat S5 as a polishing checklist; it must decide pass/rework/reject/blocked.
-- Do not send every issue to S6 because editing tools exist.
-- Do not invent timestamps, scores, model names, or evidence references.
-- Do not bury review method, confidence, or missing data.
-- Do not put long frame notes or human-gate prose in primary S5 outputs.
-- Do not mark `pass` when unresolved critical/high issues remain.
+- 不要把 S5 当成简单润色清单；它必须判断通过、返工、拒绝或阻塞。
+- 不要因为存在剪辑工具，就把所有问题推给 S6。
+- 不要编造时间戳、分数、模型名或证据引用。
+- 不要隐藏审查方法、置信度或缺失数据。
+- 不要把长抽帧笔记或人工闸门话术放进 S5 主输出。
+- 仍有未解决的 critical/high 问题时，不要标记 `pass`。
 
-## Completion Gate
+## 完成闸门
 
-S5 is complete only when all three required files exist, validation passes, and the user confirms the verdict: pass to S6, route back to S2/S3/S4, or stop.
+只有三个必需文件都存在、验证通过，并且用户确认结论为进入 S6、回到 S2/S3/S4 或停止时，S5 才算完成。

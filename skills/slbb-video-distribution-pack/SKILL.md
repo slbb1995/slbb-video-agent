@@ -1,27 +1,27 @@
 ---
 name: slbb-video-distribution-pack
-description: AI 短剧 S7 分发包生成。基于 S1-S6 的剧情、成片、质检和剪辑修正结果，生成手动发布所需的标题候选、简介、抖音/视频号/小红书平台文案、封面建议、发布时间建议和发布检查清单。Use when the user asks for “矩阵分发”, “分发包”, “平台文案”, “发布清单”, “抖音/视频号/小红书文案”, or S7 distribution artifacts in the slbb-video workflow. 第一版只准备分发材料，不自动发布。
+description: AI 短剧 S7 分发包生成。基于 S1-S6 的剧情、成片、质检和剪辑修正结果，生成手动发布所需的标题候选、简介、抖音/视频号/小红书平台文案、封面建议、发布时间建议和发布检查清单。当用户要求“矩阵分发”“分发包”“平台文案”“发布清单”“抖音/视频号/小红书文案”，或要求 slbb-video 工作流中的 S7 分发产物时使用。第一版只准备分发材料，不自动发布。
 ---
 
 # AI 短剧 S7：分发包
 
-## Overview
+## 概览
 
-Use this skill to turn a confirmed short-drama video into a manual publishing package.
+这个技能用来把确认后的短剧视频转换成手动发布包。
 
-S7 first version is intentionally conservative: it prepares the materials for 抖音、视频号、小红书, but it does not log in, upload, schedule, or publish anything.
+S7 第一版刻意保守：它只准备抖音、视频号、小红书发布材料，不登录、不上传、不定时发布，也不发布任何内容。
 
-## Operating Gates
+## 执行闸门
 
-- 🔴 CHECKPOINT: before writing a normal distribution pack, confirm S5/S6 status. If S5/S6 has blocking issues, write a `not ready to publish` package and route back to the blocking stage.
-- 🔴 CHECKPOINT: before any wording says `手动发布`, the final video path or platform draft link must be present and human-confirmed.
-- 🔴 CHECKPOINT: before entering S8 review, the user must confirm that manual publishing actually happened or provide platform-side evidence.
-- 🛑 STOP: if the final video path is missing, S7 may only produce a blocked publish checklist; do not create platform copy as if the video is ready.
-- 🛑 STOP: if the user asks this skill to upload, schedule, scrape dashboards, or mark metrics, stop and route to manual publishing or S8 after evidence exists.
+- 红色检查点：写正常分发包前，先确认 S5/S6 状态。如果 S5/S6 仍有阻塞问题，写 `not ready to publish` 包，并回到阻塞阶段。
+- 红色检查点：任何文字要写 `手动发布` 前，必须有最终视频路径或平台草稿链接，并由人工确认。
+- 红色检查点：进入 S8 复盘前，用户必须确认人工发布已经发生，或提供平台侧证据。
+- 停止：如果缺少最终视频路径，S7 只能产出阻塞版发布检查清单；不要像视频已准备好一样生成平台文案。
+- 停止：如果用户要求这个技能上传、定时、抓后台或标记数据，停止并转为人工发布；有发布证据后再进 S8。
 
-## Inputs
+## 输入
 
-Prefer workflow artifacts:
+优先使用工作流产物：
 
 ```text
 artifacts/S1/story_extract.md
@@ -33,85 +33,85 @@ artifacts/S6/edit_fix_plan.md
 artifacts/S6/edit_checklist.md
 ```
 
-Also accept:
+也可以接受：
 
-- Final video file path or platform draft link
-- Cover frame or screenshot
-- User notes about target account, target audience, and publish timing
-- Platform list, defaulting to 抖音、视频号、小红书
+- 最终视频文件路径或平台草稿链接
+- 封面帧或截图
+- 用户关于目标账号、目标受众和发布时间的说明
+- 平台列表，默认抖音、视频号、小红书
 
-## Workflow
+## 工作流程
 
-1. Create S7 skeleton:
+1. 创建 S7 骨架：
    ```bash
    python3 "$CODEX_SKILLS_ROOT/slbb-video-distribution-pack/scripts/scaffold_s7_run.py" <run_dir>
    ```
-2. Read the confirmed S1-S6 artifacts and identify the final video, story hook, target audience, QC status, and remaining risk notes.
-3. Follow `references/platform_pack_standard.md` to write platform-specific copy.
-4. Write or update:
+2. 读取已确认的 S1-S6 产物，识别最终视频、故事钩子、目标受众、质检状态和剩余风险说明。
+3. 按 `references/platform_pack_standard.md` 写各平台文案。
+4. 写入或更新：
    - `artifacts/S7/distribution_pack.md`
    - `artifacts/S7/platform_copy.md`
    - `artifacts/S7/publish_checklist.md`
-   - optional process notes under `artifacts/_meta/S7_distribution_notes.md`
-5. Insert one platform block when needed:
+   - 可选过程记录：`artifacts/_meta/S7_distribution_notes.md`
+5. 需要时插入一个平台文案块：
    ```bash
    python3 "$CODEX_SKILLS_ROOT/slbb-video-distribution-pack/scripts/add_platform_copy.py" <run_dir> --platform 抖音 --title "标题候选" --caption "正文文案" --hashtags "#短剧 #AI" --cover "封面建议" --publish-time "今晚 20:00-22:00"
    ```
-6. Validate:
+6. 验证：
    ```bash
    python3 "$CODEX_SKILLS_ROOT/slbb-video-distribution-pack/scripts/validate_s7_outputs.py" <run_dir>
    ```
-7. Stop at the human gate. Do not claim the video has been published.
+7. 停在人工闸门。不要声称视频已经发布。
 
-If `CODEX_SKILLS_ROOT` is not set, replace it with the local skills root.
+如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
 
-## Failure Modes
+## 失败模式
 
-| Trigger | Required action | Forbidden shortcut |
+| 触发情况 | 必须动作 | 禁止的偷懒做法 |
 | --- | --- | --- |
-| Final video path or draft link is missing | Write a blocked `publish_checklist.md` and ask for the final video/draft link. | Do not invent a video path or produce copy that implies the video is ready. |
-| S5 verdict is reject/blocking | Mark `暂不建议发布` and route back to S5/S6. | Do not polish the package into a publish-ready version. |
-| S6 fix plan exists but edited video is not confirmed | Keep status as `未发布 / 待人工修正确认`. | Do not say the edited version is final. |
-| User asks for automatic upload/schedule/publish | State that S7 only prepares manual publishing materials. | Do not log in, upload, schedule, or claim platform actions. |
-| User asks to enter S8 immediately | Require manual publish evidence or explicit user confirmation. | Do not create review outputs from an unpublished package. |
-| Platform copy changes story facts | Restore the S1-S6 plot, relationship, and ending. | Do not rewrite the story to chase clicks. |
-| Account permission, audit status, or traffic forecast is unknown | Mark it as `人工检查`. | Do not fabricate algorithm, permission, audit, or performance claims. |
-| Primary output contains workflow/process notes | Move notes to `publish_checklist.md` or `_meta/S7_distribution_notes.md`. | Do not put route reasoning or human-gate prose inside platform copy. |
+| 缺少最终视频路径或草稿链接 | 写阻塞版 `publish_checklist.md`，并要求提供最终视频/草稿链接。 | 编造视频路径，或产出暗示视频已准备好的文案。 |
+| S5 结论为 reject/blocking | 标记 `暂不建议发布`，并回到 S5/S6。 | 把包润色成可发布版本。 |
+| 有 S6 修正方案，但未确认已剪辑视频 | 保持状态为 `未发布 / 待人工修正确认`。 | 声称修正版已经是最终版。 |
+| 用户要求自动上传/定时/发布 | 说明 S7 只准备手动发布材料。 | 登录、上传、定时或声称平台动作已完成。 |
+| 用户要求立刻进入 S8 | 要求手动发布证据或明确用户确认。 | 从未发布包生成复盘输出。 |
+| 平台文案改变剧情事实 | 恢复 S1-S6 的剧情、关系和结尾。 | 为了追点击改写故事。 |
+| 账号权限、审核状态或流量预测未知 | 标为 `人工检查`。 | 编造算法、权限、审核或表现结论。 |
+| 主输出包含工作流/过程说明 | 把说明移到 `publish_checklist.md` 或 `_meta/S7_distribution_notes.md`。 | 把路线判断或人工闸门话术放进平台文案。 |
 
-## Rules
+## 规则
 
-- S7 produces a distribution pack only. It never performs automatic publishing in the first version.
-- Always mark the publishing state as `未发布 / 手动发布 / 不自动发布`.
-- Do not say “已发布”, “已上传”, or “已定时发布” unless the user provides platform-side confirmation.
-- Do not invent platform performance data, algorithm rules, account permissions, or compliance conclusions.
-- If S5/S6 still has blocking issues, create a “not ready to publish” package and route back to S5/S6.
-- Keep title candidates concrete and story-driven. Avoid generic AI tutorial wording.
-- Make platform copy meaning-preserving: do not change the plot, character relationship, or ending to chase clicks.
-- Each platform block must include title, caption/body, hashtags/topics, cover suggestion, and publish-time suggestion.
-- Put risk notes and human review notes in `publish_checklist.md` or `_meta`, not inside platform copy.
+- S7 只产出分发包。第一版绝不自动发布。
+- 始终把发布状态标为 `未发布 / 手动发布 / 不自动发布`。
+- 除非用户提供平台侧确认，否则不要说“已发布”“已上传”或“已定时发布”。
+- 不要编造平台表现数据、算法规则、账号权限或合规结论。
+- 如果 S5/S6 仍有阻塞问题，创建“暂不建议发布”包，并回到 S5/S6。
+- 标题候选要具体、围绕故事，不要写成泛泛的 AI 教程味。
+- 平台文案要保留含义：不要为了追点击改变剧情、人物关系或结尾。
+- 每个平台块都必须包含标题、正文/说明、话题标签、封面建议和发布时间建议。
+- 风险说明和人工审查说明放到 `publish_checklist.md` 或 `_meta`，不要放进平台文案。
 
-## Anti-pattern Blacklist
+## 反模式黑名单
 
-- Do not say `已发布`, `已上传`, `已定时发布`, or `发布完成` unless the user provides platform-side confirmation.
-- Do not treat `S7 分发包完成` as equal to `平台发布完成`.
-- Do not continue to S8 review without actual publishing evidence.
-- Do not use S7 to repair S5/S6 blocking problems; route back instead.
-- Do not invent final video paths, account permissions, platform审核结果, traffic forecasts, or comment data.
-- Do not put `TODO`, `待填写`, or `待补充` in final S7 artifacts.
-- Do not include workflow rationale, input-source blocks, or artificial human-confirmation prose in `platform_copy.md`.
-- Do not change plot facts, character relationships, or ending details for clickbait.
+- 除非用户提供平台侧确认，否则不要说 `已发布`、`已上传`、`已定时发布` 或 `发布完成`。
+- 不要把 `S7 分发包完成` 等同于 `平台发布完成`。
+- 没有实际发布证据，不要继续进入 S8 复盘。
+- 不要用 S7 修复 S5/S6 的阻塞问题；要回到对应阶段。
+- 不要编造最终视频路径、账号权限、平台审核结果、流量预测或评论数据。
+- 最终 S7 产物不要包含 `TODO`、`待填写` 或 `待补充`。
+- 不要在 `platform_copy.md` 里包含工作流理由、输入来源块或人造人工确认话术。
+- 不要为标题党改变剧情事实、人物关系或结尾细节。
 
-## Platform Scope
+## 平台范围
 
-First-version default platforms:
+第一版默认平台：
 
 - 抖音：强钩子、短标题、短正文、话题标签、封面标题。
 - 视频号：更直接、更像真实转述，强调故事冲突和评论引导。
 - 小红书：笔记感标题、封面字、正文分段、标签。
 
-For detailed requirements, read `references/platform_pack_standard.md`.
+详细要求见 `references/platform_pack_standard.md`。
 
-## Required Outputs
+## 必需输出
 
 ```text
 artifacts/S7/distribution_pack.md
@@ -119,10 +119,10 @@ artifacts/S7/platform_copy.md
 artifacts/S7/publish_checklist.md
 ```
 
-See `references/output_contract.md`.
+见 `references/output_contract.md`。
 
-Primary S7 outputs are client-facing publishing materials. They should not contain workflow reasoning, input-source blocks, or artificial human-confirmation prose.
+S7 主输出是给客户看的发布材料，不应包含工作流推理、输入来源块或人造人工确认话术。
 
-## Completion Gate
+## 完成闸门
 
-S7 is complete only when all three required outputs exist, validation passes, and the user confirms whether to manually publish or revise the package. It is not equivalent to publishing.
+只有三个必需输出都存在、验证通过，并且用户确认手动发布或修订分发包时，S7 才算完成。它不等于已经发布。
