@@ -1,6 +1,6 @@
 ---
 name: slbb-video-image-prompts
-description: AI 短剧/长剧 S2 图片提示词生成。当用户已有 S1 剧情提取/复刻产物、短剧剧情文本、长剧二创描述、分集片段、角色说明、场景说明，或要求生成“生图片参考提示词”“首图提示词”“人物参考图”“白底三视图”“场景图”“短剧角色定妆照”“长剧多年龄段角色图”“短剧场景空镜”，以及 slbb-video 工作流的 S2 图片提示词包时使用。
+description: AI 短剧/长剧 S2 图片提示词生成。当用户已有 S1 剧情提取/复刻产物、短剧剧情文本、长剧二创描述、分集片段、角色说明、场景说明，或要求生成“生图片参考提示词”“首图提示词”“人物参考图”“白底三视图”“场景图”“短剧角色定妆照”“长剧多年龄段角色图”“短剧场景空镜”，以及 本视频工作流的 S2 图片提示词包时使用。
 ---
 
 # AI 短剧 S2：图片提示词
@@ -136,16 +136,16 @@ artifacts/_meta/S2_prompt_notes.md
 创建 S2 骨架：
 
 ```bash
-python3 "$CODEX_SKILLS_ROOT/slbb-video-image-prompts/scripts/scaffold_s2_run.py" <run_dir>
+python3 "skills/slbb-video-image-prompts/scripts/scaffold_s2_run.py" <run_dir>
 ```
 
 验证 S2 输出：
 
 ```bash
-python3 "$CODEX_SKILLS_ROOT/slbb-video-image-prompts/scripts/validate_s2_outputs.py" <run_dir>
+python3 "skills/slbb-video-image-prompts/scripts/validate_s2_outputs.py" <run_dir>
 ```
 
-如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
+从包根目录运行上述命令；如果只拿到了单独 skill 目录，则改用该 skill 目录内的相对脚本路径。
 
 ## 完成闸门
 

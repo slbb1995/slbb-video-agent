@@ -196,10 +196,13 @@ def utc_now() -> str:
 
 
 def skills_root() -> Path:
+    local_root = Path(__file__).resolve().parents[2]
+    if (local_root / "slbb-video-orchestrator").exists():
+        return local_root
     env_root = os.environ.get("CODEX_SKILLS_ROOT")
     if env_root:
         return Path(env_root).expanduser().resolve()
-    return Path(__file__).resolve().parents[2]
+    return local_root
 
 
 def state_path(run_dir: Path) -> Path:
@@ -217,7 +220,7 @@ def default_state(title: str, mode: str = "short_drama") -> dict[str, Any]:
     mode = normalize_mode(mode)
     stages = stages_for_mode(mode)
     return {
-        "workflow_name": "slbb-video-workflow",
+        "workflow_name": "ai-video-workflow",
         "version": "0.3",
         "mode": mode,
         "title": title,
@@ -602,13 +605,13 @@ def write_handoff(run_dir: Path, stage: dict[str, Any], message: str, target_seg
 macOS / Linux:
 
 ```bash
-python3 "$CODEX_SKILLS_ROOT/{stage["skill"]}/scripts/scaffold_{stage["id"].lower()}_run.py" <AI短剧生成过程文件目录>
+python3 "skills/{stage["skill"]}/scripts/scaffold_{stage["id"].lower()}_run.py" <AI短剧生成过程文件目录>
 ```
 
 Windows PowerShell:
 
 ```powershell
-py -3 "$env:CODEX_SKILLS_ROOT/{stage["skill"]}/scripts/scaffold_{stage["id"].lower()}_run.py" <AI短剧生成过程文件目录>
+py -3 ".\\skills\\{stage["skill"]}\\scripts\\scaffold_{stage["id"].lower()}_run.py" <AI短剧生成过程文件目录>
 ```
 """
     path = handoff_dir / "next_step.md"

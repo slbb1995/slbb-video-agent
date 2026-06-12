@@ -1,6 +1,6 @@
 ---
 name: slbb-video-motion-prompts
-description: AI 短剧/长剧 S3 生视频提示词生成，把 S1 剧情分集或长剧复刻/二创片段描述，以及 S2 图片提示词、首帧、角色、场景参考，转换成即梦或可灵可复制的视频生成提示词。当用户要求“生视频提示词”“剧情生视频提示词”“长剧反推提示词”“即梦视频提示词”“可灵图生视频提示词”“短剧镜头表”“15秒短剧分镜”“把剧情转成视频提示词”，或要求生成 slbb-video 工作流的 S3 生视频提示词产物时使用。
+description: AI 短剧/长剧 S3 生视频提示词生成，把 S1 剧情分集或长剧复刻/二创片段描述，以及 S2 图片提示词、首帧、角色、场景参考，转换成即梦或可灵可复制的视频生成提示词。当用户要求“生视频提示词”“剧情生视频提示词”“长剧反推提示词”“即梦视频提示词”“可灵图生视频提示词”“短剧镜头表”“15秒短剧分镜”“把剧情转成视频提示词”，或要求生成 本视频工作流的 S3 生视频提示词产物时使用。
 ---
 
 # AI 短剧 S3：生视频提示词
@@ -164,16 +164,16 @@ artifacts/_meta/S3_motion_design_notes.md
 创建 S3 骨架：
 
 ```bash
-python3 "$CODEX_SKILLS_ROOT/slbb-video-motion-prompts/scripts/scaffold_s3_run.py" <run_dir>
+python3 "skills/slbb-video-motion-prompts/scripts/scaffold_s3_run.py" <run_dir>
 ```
 
 验证 S3 输出：
 
 ```bash
-python3 "$CODEX_SKILLS_ROOT/slbb-video-motion-prompts/scripts/validate_s3_outputs.py" <run_dir>
+python3 "skills/slbb-video-motion-prompts/scripts/validate_s3_outputs.py" <run_dir>
 ```
 
-如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
+从包根目录运行上述命令；如果只拿到了单独 skill 目录，则改用该 skill 目录内的相对脚本路径。
 
 ## 完成闸门
 

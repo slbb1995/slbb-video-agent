@@ -1,6 +1,6 @@
 ---
 name: slbb-video-distribution-pack
-description: AI 短剧 S7 分发包生成。基于 S1-S6 的剧情、成片、质检和剪辑修正结果，生成手动发布所需的标题候选、简介、抖音/视频号/小红书平台文案、封面建议、发布时间建议和发布检查清单。当用户要求“矩阵分发”“分发包”“平台文案”“发布清单”“抖音/视频号/小红书文案”，或要求 slbb-video 工作流中的 S7 分发产物时使用。第一版只准备分发材料，不自动发布。
+description: AI 短剧 S7 分发包生成。基于 S1-S6 的剧情、成片、质检和剪辑修正结果，生成手动发布所需的标题候选、简介、抖音/视频号/小红书平台文案、封面建议、发布时间建议和发布检查清单。当用户要求“矩阵分发”“分发包”“平台文案”“发布清单”“抖音/视频号/小红书文案”，或要求 本视频工作流中的 S7 分发产物时使用。第一版只准备分发材料，不自动发布。
 ---
 
 # AI 短剧 S7：分发包
@@ -44,7 +44,7 @@ artifacts/S6/edit_checklist.md
 
 1. 创建 S7 骨架：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-distribution-pack/scripts/scaffold_s7_run.py" <run_dir>
+   python3 "skills/slbb-video-distribution-pack/scripts/scaffold_s7_run.py" <run_dir>
    ```
 2. 读取已确认的 S1-S6 产物，识别最终视频、故事钩子、目标受众、质检状态和剩余风险说明。
 3. 按 `references/platform_pack_standard.md` 写各平台文案。
@@ -55,15 +55,15 @@ artifacts/S6/edit_checklist.md
    - 可选过程记录：`artifacts/_meta/S7_distribution_notes.md`
 5. 需要时插入一个平台文案块：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-distribution-pack/scripts/add_platform_copy.py" <run_dir> --platform 抖音 --title "标题候选" --caption "正文文案" --hashtags "#短剧 #AI" --cover "封面建议" --publish-time "今晚 20:00-22:00"
+   python3 "skills/slbb-video-distribution-pack/scripts/add_platform_copy.py" <run_dir> --platform 抖音 --title "标题候选" --caption "正文文案" --hashtags "#短剧 #AI" --cover "封面建议" --publish-time "今晚 20:00-22:00"
    ```
 6. 验证：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-distribution-pack/scripts/validate_s7_outputs.py" <run_dir>
+   python3 "skills/slbb-video-distribution-pack/scripts/validate_s7_outputs.py" <run_dir>
    ```
 7. 停在人工闸门。不要声称视频已经发布。
 
-如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
+从包根目录运行上述命令；如果只拿到了单独 skill 目录，则改用该 skill 目录内的相对脚本路径。
 
 ## 失败模式
 

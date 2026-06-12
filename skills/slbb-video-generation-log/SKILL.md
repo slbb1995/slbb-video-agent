@@ -1,6 +1,6 @@
 ---
 name: slbb-video-generation-log
-description: AI 短剧 S4 视频生成执行记录。当用户在即梦、可灵或其他平台手动生成短剧视频，需要登记平台、提示词、图片资产、生成尝试、生成文件/URL、失败原因、选中版本，并交接给 S5 质检时使用。触发词包括“视频生成记录”“生成日志”“记录即梦/可灵生成结果”“选择哪版视频”“人工生成视频后登记”，以及 slbb-video 工作流中的 S4 产物。
+description: AI 短剧 S4 视频生成执行记录。当用户在即梦、可灵或其他平台手动生成短剧视频，需要登记平台、提示词、图片资产、生成尝试、生成文件/URL、失败原因、选中版本，并交接给 S5 质检时使用。触发词包括“视频生成记录”“生成日志”“记录即梦/可灵生成结果”“选择哪版视频”“人工生成视频后登记”，以及 本视频工作流中的 S4 产物。
 ---
 
 # AI 短剧 S4：视频生成记录
@@ -43,23 +43,23 @@ artifacts/S3/platform_copy_ready_prompts.md
 
 1. 创建 S4 骨架：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-generation-log/scripts/scaffold_s4_run.py" <run_dir>
+   python3 "skills/slbb-video-generation-log/scripts/scaffold_s4_run.py" <run_dir>
    ```
 2. 让人工操作者在目标平台手动生成视频。
 3. 追加每个生成版本或失败尝试：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-generation-log/scripts/append_generation_record.py" <run_dir> --clip-id clip-001 --platform 即梦 --generation-mode image-to-video --prompt-ref artifacts/S3/platform_copy_ready_prompts.md --reference-assets "artifacts/S2/image_prompt_pack.md" --output-ref "/path/or/url/to/video.mp4" --status success --selected-for-qc yes --notes "selected version"
+   python3 "skills/slbb-video-generation-log/scripts/append_generation_record.py" <run_dir> --clip-id clip-001 --platform 即梦 --generation-mode image-to-video --prompt-ref artifacts/S3/platform_copy_ready_prompts.md --reference-assets "artifacts/S2/image_prompt_pack.md" --output-ref "/path/or/url/to/video.mp4" --status success --selected-for-qc yes --notes "selected version"
    ```
 4. 更新 `artifacts/S4/generation_run_log.md`，写入简洁总结和选中版本。
    - Markdown 总结保持干净：平台、设置、生成版本、选中版本、失败/重试记录。
    - 如有需要，把操作者判断或交接说明放到 `artifacts/_audit/S4_attempt_notes.md`。
 5. 验证：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-generation-log/scripts/validate_s4_outputs.py" <run_dir>
+   python3 "skills/slbb-video-generation-log/scripts/validate_s4_outputs.py" <run_dir>
    ```
 6. 停在人工闸门。所选视频确认之前，不要继续进入 S5。
 
-如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
+从包根目录运行上述命令；如果只拿到了单独 skill 目录，则改用该 skill 目录内的相对脚本路径。
 
 ## 规则
 

@@ -1,6 +1,6 @@
 ---
 name: slbb-video-edit-fix
-description: AI 短剧/长剧 S6 人工剪辑修正方案，基于 S5 质检结果生成给人工编辑执行的修正清单和返工建议；AI 不剪辑视频、不生成配音、不导出成片。当用户要求“剪辑修正方案”“人工修正清单”“长剧段落衔接”“补镜头建议”“重生片段建议”“字幕遮挡方案”“遮住乱码字幕”“剪映操作清单”“视频修正清单”，或要求 slbb-video 工作流中的 S6 剪辑修正产物时使用。
+description: AI 短剧/长剧 S6 人工剪辑修正方案，基于 S5 质检结果生成给人工编辑执行的修正清单和返工建议；AI 不剪辑视频、不生成配音、不导出成片。当用户要求“剪辑修正方案”“人工修正清单”“长剧段落衔接”“补镜头建议”“重生片段建议”“字幕遮挡方案”“遮住乱码字幕”“剪映操作清单”“视频修正清单”，或要求 本视频工作流中的 S6 剪辑修正产物时使用。
 ---
 
 # AI 短剧 S6：剪辑修正
@@ -44,13 +44,13 @@ artifacts/S5/rework_suggestions.md
 
 1. 创建 S6 骨架：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-edit-fix/scripts/scaffold_s6_run.py" <run_dir>
+   python3 "skills/slbb-video-edit-fix/scripts/scaffold_s6_run.py" <run_dir>
    ```
 2. 读取 S5 产物，识别哪些问题可以通过剪辑修。
 3. 遇到字幕/文字异常，遵循 `references/subtitle_cover_standard.md`。
 4. 添加每个手动修复项：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-edit-fix/scripts/add_edit_fix_item.py" <run_dir> --fix-id fix-001 --type subtitle_cover --timestamp "0:00-0:15" --problem "即梦生成乱码字幕" --action "人工在剪映添加白底遮罩覆盖原字幕，黑体重打正确字幕" --acceptance "人工预览确认原乱码不可见，新字幕清晰可读"
+   python3 "skills/slbb-video-edit-fix/scripts/add_edit_fix_item.py" <run_dir> --fix-id fix-001 --type subtitle_cover --timestamp "0:00-0:15" --problem "即梦生成乱码字幕" --action "人工在剪映添加白底遮罩覆盖原字幕，黑体重打正确字幕" --acceptance "人工预览确认原乱码不可见，新字幕清晰可读"
    ```
 5. 写入或更新：
    - `artifacts/S6/edit_fix_plan.md`
@@ -58,11 +58,11 @@ artifacts/S5/rework_suggestions.md
    - 可选过程记录：`artifacts/_audit/S6_edit_log.md`
 6. 验证：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-edit-fix/scripts/validate_s6_outputs.py" <run_dir>
+   python3 "skills/slbb-video-edit-fix/scripts/validate_s6_outputs.py" <run_dir>
    ```
 7. 停在人工闸门。用户确认人工剪辑方案，或提供修订后视频文件之前，不要继续进入 S7。
 
-如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
+从包根目录运行上述命令；如果只拿到了单独 skill 目录，则改用该 skill 目录内的相对脚本路径。
 
 ## 规则
 

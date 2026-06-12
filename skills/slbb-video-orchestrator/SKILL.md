@@ -1,6 +1,6 @@
 ---
 name: slbb-video-orchestrator
-description: AI 短剧 S1-S8 总控技能。用于按状态机推进 slbb-video 工作流，检查每阶段产物、运行阶段校验、维护 workflow_state.json、生成下一步 handoff，并强制人工闸门。当用户要求“AI短剧总控”“跑完整个短剧工作流”“S1-S8 串起来”“orchestrator”“状态机”或“下一步该跑哪个 Skill”时使用。总控只管流程，不代替 S1-S8 具体内容技能。
+description: AI 短剧 S1-S8 总控技能。用于按状态机推进 本视频工作流，检查每阶段产物、运行阶段校验、维护 workflow_state.json、生成下一步 handoff，并强制人工闸门。当用户要求“AI短剧总控”“跑完整个短剧工作流”“S1-S8 串起来”“orchestrator”“状态机”或“下一步该跑哪个 Skill”时使用。总控只管流程，不代替 S1-S8 具体内容技能。
 ---
 
 # AI 短剧总控：S1-S8
@@ -41,7 +41,7 @@ S2 完成时，`workflow_state.json` 必须从 `artifacts/S1/story_segments.json
 
 1. 创建 AI 短剧生成过程文件目录：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-orchestrator/scripts/init_run.py" <AI短剧生成过程文件目录> --title "<短剧/项目名>"
+   python3 "skills/slbb-video-orchestrator/scripts/init_run.py" <AI短剧生成过程文件目录> --title "<短剧/项目名>"
    ```
 
    或把 V2 监控台（ai-drama-monitor）的 handoff 导入为来源：
@@ -67,23 +67,23 @@ S2 完成时，`workflow_state.json` 必须从 `artifacts/S1/story_segments.json
 
 2. 查询下一步：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-orchestrator/scripts/next_step.py" <AI短剧生成过程文件目录>
+   python3 "skills/slbb-video-orchestrator/scripts/next_step.py" <AI短剧生成过程文件目录>
    ```
 3. 运行 `artifacts/_handoff/next_step.md` 指定的阶段技能。
 4. 红色检查点：当阶段产物可以审查时，标记为待人工确认：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-orchestrator/scripts/advance_stage.py" <AI短剧生成过程文件目录> --stage S1 --status ready_for_human --note "等待用户确认剧情"
+   python3 "skills/slbb-video-orchestrator/scripts/advance_stage.py" <AI短剧生成过程文件目录> --stage S1 --status ready_for_human --note "等待用户确认剧情"
    ```
 5. 红色检查点：用户确认人工闸门后，完成该阶段：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-orchestrator/scripts/advance_stage.py" <AI短剧生成过程文件目录> --stage S1 --status completed --human-confirmed --note "用户确认剧情"
+   python3 "skills/slbb-video-orchestrator/scripts/advance_stage.py" <AI短剧生成过程文件目录> --stage S1 --status completed --human-confirmed --note "用户确认剧情"
    ```
 6. 验证状态：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-orchestrator/scripts/validate_orchestrator_state.py" <AI短剧生成过程文件目录>
+   python3 "skills/slbb-video-orchestrator/scripts/validate_orchestrator_state.py" <AI短剧生成过程文件目录>
    ```
 
-如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
+从包根目录运行上述命令；如果只拿到了单独 skill 目录，则改用该 skill 目录内的相对脚本路径。
 
 ## 阶段地图
 

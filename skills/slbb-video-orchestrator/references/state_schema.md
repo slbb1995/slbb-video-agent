@@ -4,7 +4,7 @@
 
 ```json
 {
-  "workflow_name": "slbb-video-workflow",
+  "workflow_name": "ai-video-workflow",
   "version": "0.3",
   "mode": "short_drama",
   "title": "短剧/项目名",

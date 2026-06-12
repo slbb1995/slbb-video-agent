@@ -1,6 +1,6 @@
 ---
 name: slbb-video-qc
-description: AI 短剧/长剧 S5 视频质检与问题归因。当用户已经用即梦、可灵或其他平台生成视频片段，需要检查人物、变形、动作、光线、表情、镜头稳定、字幕/文字异常、剧情还原度、长剧角色连续性、平台生成瑕疵，并判断问题来自 S1 剧情拆分/复刻描述、S2 图片提示词、S3 生视频提示词、S4 生成设置/平台，还是应进入 S6 剪辑修正时使用。触发词包括“视频质检”“视频审查”“长剧连续性质检”“质检表”“Gemini质检”“抽帧检查”“人物变形”“动作不合适”“光线问题”“字幕乱码”“反推提示词问题”，以及 slbb-video 工作流中的 S5 产物。
+description: AI 短剧/长剧 S5 视频质检与问题归因。当用户已经用即梦、可灵或其他平台生成视频片段，需要检查人物、变形、动作、光线、表情、镜头稳定、字幕/文字异常、剧情还原度、长剧角色连续性、平台生成瑕疵，并判断问题来自 S1 剧情拆分/复刻描述、S2 图片提示词、S3 生视频提示词、S4 生成设置/平台，还是应进入 S6 剪辑修正时使用。触发词包括“视频质检”“视频审查”“长剧连续性质检”“质检表”“Gemini质检”“抽帧检查”“人物变形”“动作不合适”“光线问题”“字幕乱码”“反推提示词问题”，以及 本视频工作流中的 S5 产物。
 ---
 
 # AI 短剧 S5：视频质检
@@ -45,7 +45,7 @@ artifacts/S4/generation_run_log.csv
 
 1. 创建 S5 骨架：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-qc/scripts/scaffold_s5_run.py" <run_dir>
+   python3 "skills/slbb-video-qc/scripts/scaffold_s5_run.py" <run_dir>
    ```
 2. 检查 S4，识别选中的生成视频/版本。
 3. 使用当前最可靠的方法审查视频：
@@ -55,18 +55,18 @@ artifacts/S4/generation_run_log.csv
    - 用户已经提供的质检笔记
 4. 使用脚本添加问题：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-qc/scripts/add_qc_issue.py" <run_dir> --category character_consistency --severity high --timestamp "0:04-0:06" --observation "人物脸变形" --likely-source-step S2 --recommendation "重做人物参考图并锁定角色"
+   python3 "skills/slbb-video-qc/scripts/add_qc_issue.py" <run_dir> --category character_consistency --severity high --timestamp "0:04-0:06" --observation "人物脸变形" --likely-source-step S2 --recommendation "重做人物参考图并锁定角色"
    ```
 5. 写入 `qc_report.md`、`qc_verdict.json` 和 `rework_suggestions.md`。
    - S5 主文件要可执行：结论、问题证据、归因、可修性、返工动作。
    - 审查方法细节、模型说明、长抽帧观察和人工闸门话术，如有需要放到 `artifacts/_audit/S5_review_notes.md`。
 6. 验证：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-qc/scripts/validate_s5_outputs.py" <run_dir>
+   python3 "skills/slbb-video-qc/scripts/validate_s5_outputs.py" <run_dir>
    ```
 7. 停在人工闸门。用户确认质检结论前，不要继续进入 S6。
 
-如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
+从包根目录运行上述命令；如果只拿到了单独 skill 目录，则改用该 skill 目录内的相对脚本路径。
 
 ## 质检类别
 

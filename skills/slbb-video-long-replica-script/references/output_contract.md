@@ -1,8 +1,8 @@
-# Long Drama S1 Output Contract
+# 长剧 S1 输出契约
 
-S1 turns one selected reference video or user-provided reference package into clean replica and second-creation descriptions. It is not a topic workbench and it is not a prompt-generation stage.
+S1 把一个已选定的对标视频或用户提供的素材包，整理成干净的复刻描述和二创描述。S1 不是选题工作台，也不是提示词生成阶段。
 
-## Required Directory
+## 必需目录
 
 ```text
 <run_dir>/
@@ -17,7 +17,7 @@ S1 turns one selected reference video or user-provided reference package into cl
 
 ## source_replica_description.md
 
-Must use this structure:
+必须使用以下结构：
 
 ```markdown
 # AI短视频复刻描述提取报告
@@ -30,11 +30,11 @@ Must use this structure:
 ## 6. 原视频剧情总结
 ```
 
-This file describes the source reference video. It must not include second-creation execution notes, workflow notes, or video-generation prompts.
+这个文件只描述原始对标素材。不得包含二创执行笔记、工作流笔记或视频生成提示词。
 
 ## second_creation_description.md
 
-Must use this structure:
+必须使用以下结构：
 
 ```markdown
 # 二次创作版复刻描述
@@ -45,11 +45,11 @@ Must use this structure:
 ## 4. 二创后分片段详细画面描述
 ```
 
-This file keeps the source structure but performs originalizing adjustments inside the approved boundary.
+这个文件保留原始结构，但在已确认边界内做原创化调整。
 
 ## story_segments.json
 
-Top-level object:
+顶层对象：
 
 ```json
 {
@@ -58,7 +58,7 @@ Top-level object:
 }
 ```
 
-Each character must include:
+每个角色必须包含：
 
 - `name`
 - `role`
@@ -66,7 +66,7 @@ Each character must include:
 - `relationship`
 - `visual_anchor`
 
-`visual_anchor` must include:
+`visual_anchor` 必须包含：
 
 - `face`
 - `hair`
@@ -76,16 +76,16 @@ Each character must include:
 - `accessories`
 - `temperament`
 
-Recommended long-drama character fields:
+推荐补充的长剧角色字段：
 
 - `age_stage`
 - `same_person_group`
 - `continuity_anchor`
 - `production_alias`
 
-`name` is the canonical character ID used by downstream S2/S3. Prefer source/reference role names unless the user explicitly asks to rename roles. If the second-creation version changes the role label, use `production_alias`, `role`, `appearance`, or segment descriptions; do not change naming systems between top-level characters and episodes.
+`name` 是下游 S2/S3 使用的标准角色 ID。除非用户明确要求改名，否则优先使用对标素材里的角色称呼。若二创版本改变了角色标签，把变化写入 `production_alias`、`role`、`appearance` 或片段描述；不要让顶层角色和片段角色使用两套命名系统。
 
-Each episode must include:
+每个片段必须包含：
 
 - `episode_id`
 - `episode_name`
@@ -99,26 +99,26 @@ Each episode must include:
 - `timeline`
 - `review`
 
-`timeline` must be a non-empty object. Each beat should include:
+`timeline` 必须是非空对象。每个节拍建议包含：
 
 - `camera`
 - `action`
 - `dialogue_or_sound`
 
-Every value in `episodes[].characters` must exactly match one top-level `characters[].name`. If an episode needs a group such as `小鸡群`, `路人`, or `学生群体`, add it as a top-level character/group entry with a visual anchor, or move it to `props` / scene description instead of `characters`.
+`episodes[].characters` 的每个值必须与顶层 `characters[].name` 完全一致。如果某个片段需要群体角色，例如 `路人群体`、`学生群体` 或 `工作人员群体`，要把它作为顶层角色 / 群体条目并补充视觉锚点；也可以把它移到 `props` 或场景描述里，不要塞进 `characters` 后破坏校验。
 
-## Clean Output Rules
+## 干净输出规则
 
-Primary S1 files must not contain:
+S1 主产物不得包含：
 
-- content workbench or topic-pool notes
-- trend scoring
-- video generation prompts
-- storyboard prompts
-- finished shooting scripts
-- cover copy
-- publishing plan
-- workflow rationale
-- human confirmation text
+- 内容中台或选题池笔记
+- 趋势评分
+- 视频生成提示词
+- 分镜提示词
+- 成片拍摄脚本
+- 封面文案
+- 发布计划
+- 工作流解释
+- 人工确认文字
 
-Put source limits, missing evidence, user confirmation notes, and blocked items in `artifacts/_meta/S1_replica_notes.md`.
+素材限制、缺失证据、用户确认记录和阻塞事项统一放入 `artifacts/_meta/S1_replica_notes.md`。

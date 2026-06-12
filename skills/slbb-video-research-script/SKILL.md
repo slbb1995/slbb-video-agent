@@ -1,6 +1,6 @@
 ---
 name: slbb-video-research-script
-description: AI 短剧/长剧 S1 调研、剧情提取、剧情拆分、15 秒短视频分集拆解、人物关系整理和版权/改写风险提示。当用户提供短剧名称、平台、原始故事、剧本、梗概、飞书/Markdown 素材，或要求“短剧调研”“剧情提取”“拆分剧情”“生剧情提示词”“版权筛查”“改写成 AI 短视频剧情”，以及为 slbb-video 工作流准备 S1 产物时使用。
+description: AI 短剧/长剧 S1 调研、剧情提取、剧情拆分、15 秒短视频分集拆解、人物关系整理和版权/改写风险提示。当用户提供短剧名称、平台、原始故事、剧本、梗概、飞书/Markdown 素材，或要求“短剧调研”“剧情提取”“拆分剧情”“生剧情提示词”“版权筛查”“改写成 AI 短视频剧情”，以及为 本视频工作流准备 S1 产物时使用。
 ---
 
 # AI 短剧 S1：调研与剧情提取拆分
@@ -141,15 +141,15 @@ S2 输入章节必须说明哪些人物需要“一张图三视图”参考图�
 创建 run 骨架：
 
 ```bash
-python3 "$CODEX_SKILLS_ROOT/slbb-video-research-script/scripts/scaffold_s1_run.py" <run_dir>
+python3 "skills/slbb-video-research-script/scripts/scaffold_s1_run.py" <run_dir>
 ```
 
-如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
+从包根目录运行上述命令；如果只拿到了单独 skill 目录，则改用该 skill 目录内的相对脚本路径。
 
 验证输出：
 
 ```bash
-python3 "$CODEX_SKILLS_ROOT/slbb-video-research-script/scripts/validate_s1_outputs.py" <run_dir>
+python3 "skills/slbb-video-research-script/scripts/validate_s1_outputs.py" <run_dir>
 ```
 
 ## 完成闸门

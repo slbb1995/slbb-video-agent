@@ -1,11 +1,11 @@
-# Slbb Video Agent Workflow
+# AI Video Agent Workflow
 
-> 🤖 **如果你是 AI Agent 接管这个包**：先读 [`START_HERE.md`](./START_HERE.md)，里面有完整接管流程。
+> **如果你是 AI Agent 接管这个包**：先读 [`START_HERE.md`](./START_HERE.md)，里面有完整接管流程。
 > 👤 **如果你是团队成员**：从下面的"运行要求 + 推荐阅读顺序"开始。
 
-这是「石榴爸爸 AI 短视频 / AI 短剧 / AI 长剧」团队交付版工作流包。
+这是一个可交付给客户或团队成员使用的 AI 短视频 / AI 短剧 / AI 长剧工作流包。
 
-包内包含 **10 个本地 Agent skills**（短剧 8 个 + 长剧 1 个 + 总控 1 个）。Codex 可以安装成 skills；Claude Code、WorkBuddy 或其他 AI Agent 也可以直接读取 `skills/*/SKILL.md` 和本包 `bin/` 脚本来执行。
+包内包含 **10 个本地 Agent skills**（短剧 8 个 + 长剧 1 个 + 总控 1 个）。推荐让 AI Agent 直接读取本项目内的 `skills/*/SKILL.md`，并使用本包 `bin/` 脚本执行；不要默认复制到全局 skills 目录，避免影响其他项目。
 
 - `slbb-video-orchestrator`：总控，负责状态机、人工闸门、下一步 handoff。
 - `slbb-video-research-script`：S1 短剧调研与剧情提取。
@@ -41,12 +41,12 @@ Windows：
 ## 给学员的一句话安装提示词
 
 ```text
-请帮我安装并接管这个项目：https://github.com/slbb1995/slbb-video-agent.git 。先 clone 到本地，阅读 START_HERE.md、README.md、QUICKSTART.md；如果你的环境支持本地 skills，就按对应方式安装 skills/slbb-video-*；如果不支持，就直接在项目目录里读取 skills/*/SKILL.md 并使用 bin/ 脚本运行。先执行 slbb-video-doctor 检查环境，缺什么先告诉我并问我是否安装。
+请帮我接管这个 AI 视频工作流包。先进入项目根目录，阅读 START_HERE.md、README.md、QUICKSTART.md；不要把本包 skills 复制到全局 skills 目录，直接在项目目录里读取 skills/*/SKILL.md，并使用 bin/ 脚本运行。先执行 slbb-video-doctor 检查环境，缺什么先告诉我并问我是否安装。
 ```
 
 ## 两种使用方式
 
-### 方式 A：直接在本包内运行脚本
+### 方式 A：直接在本包内运行脚本（推荐）
 
 不需要配置环境变量。macOS / Linux 用无后缀脚本：
 
@@ -72,29 +72,41 @@ py -3 .\bin\slbb-video.py next ".\runs\demo"
 py -3 .\bin\slbb-video.py validate ".\runs\demo"
 ```
 
-后续 skill 文档里如果看到 `python3 "$CODEX_SKILLS_ROOT/..."`，Windows 电脑统一把开头的 `python3` 换成 `py -3`。
+后续 skill 文档里的命令默认从项目根目录运行。Windows 电脑统一把开头的 `python3` 换成 `py -3`。
 
-### 方式 B：安装到支持的本地 skill 目录（可选）
+### 方式 B：仅在当前项目临时指定 skills 根目录（可选）
 
-不是所有 AI Agent 都有本地 skill 目录。没有也没关系，直接使用方式 A，让 AI Agent 在本项目目录里读取 `skills/*/SKILL.md` 即可。
+不是所有 AI Agent 都需要本地 skill 目录。默认使用方式 A 即可，让 AI Agent 在本项目目录里读取 `skills/*/SKILL.md`。
 
-如果你用 Codex，可以安装到 Codex skills 目录：
+如果你的工具必须依赖 `CODEX_SKILLS_ROOT`，只在当前终端临时设置到本项目的 `skills/` 目录，不要写入全局 shell 配置。
 
 macOS / Linux：
 
 ```bash
-mkdir -p ~/.codex/skills
-cp -R skills/slbb-video-* ~/.codex/skills/
+export CODEX_SKILLS_ROOT="$PWD/skills"
 ```
 
 Windows PowerShell：
 
 ```powershell
-New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\skills"
-Copy-Item -Recurse .\skills\slbb-video-* "$env:USERPROFILE\.codex\skills\"
+$env:CODEX_SKILLS_ROOT = "$PWD\skills"
 ```
 
-安装后，在 Codex 里点名对应 skill 即可。Claude Code / WorkBuddy 等环境如果没有这个目录，不要强行创建，直接让 AI 读取项目内的 skill 文档。
+使用完成后可以关闭当前终端，或手动清理这个临时变量，避免其他项目误用本包 skills。
+
+macOS / Linux：
+
+```bash
+unset CODEX_SKILLS_ROOT
+```
+
+Windows PowerShell：
+
+```powershell
+Remove-Item Env:CODEX_SKILLS_ROOT -ErrorAction SilentlyContinue
+```
+
+如果已经误复制到全局 skills 目录，请从全局目录移除本包的 `slbb-video-*` skill，再回到方式 A。
 
 单独安装 `skills/slbb-video-orchestrator` 时，这个 skill 自己也带了视频相关 wrapper：
 

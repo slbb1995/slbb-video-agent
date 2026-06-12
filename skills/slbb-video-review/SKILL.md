@@ -1,6 +1,6 @@
 ---
 name: slbb-video-review
-description: AI 短剧 S8 发布后复盘。读取抖音、视频号、小红书等平台的播放、点赞、评论、转发、收藏、完播、留存和用户反馈，输出复盘报告、问题归因、下一轮选题建议和提示词/生成/剪辑/分发调整计划。当用户要求“短剧复盘”“发布后数据分析”“播放点赞转发留存复盘”“下一轮怎么改”，或要求 slbb-video 工作流中的 S8 复盘产物时使用。
+description: AI 短剧 S8 发布后复盘。读取抖音、视频号、小红书等平台的播放、点赞、评论、转发、收藏、完播、留存和用户反馈，输出复盘报告、问题归因、下一轮选题建议和提示词/生成/剪辑/分发调整计划。当用户要求“短剧复盘”“发布后数据分析”“播放点赞转发留存复盘”“下一轮怎么改”，或要求 本视频工作流中的 S8 复盘产物时使用。
 ---
 
 # AI 短剧 S8：发布后复盘
@@ -55,15 +55,15 @@ artifacts/S7/publish_checklist.md
 
 1. 创建 S8 骨架：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-review/scripts/scaffold_s8_run.py" <run_dir>
+   python3 "skills/slbb-video-review/scripts/scaffold_s8_run.py" <run_dir>
    ```
 2. 记录平台数据。可以添加一行数据：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-review/scripts/add_metric_row.py" <run_dir> --platform 抖音 --views 1200 --likes 80 --comments 12 --shares 5 --saves 9 --completion-rate 23.5 --retention "3s=61%, 5s=43%" --feedback "开头能看懂，但反转不够强"
+   python3 "skills/slbb-video-review/scripts/add_metric_row.py" <run_dir> --platform 抖音 --views 1200 --likes 80 --comments 12 --shares 5 --saves 9 --completion-rate 23.5 --retention "3s=61%, 5s=43%" --feedback "开头能看懂，但反转不够强"
    ```
    或导入 CSV：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-review/scripts/ingest_metric_csv.py" <run_dir> <csv_path> --source "抖音后台导出"
+   python3 "skills/slbb-video-review/scripts/ingest_metric_csv.py" <run_dir> <csv_path> --source "抖音后台导出"
    ```
 3. 读取 S1-S7 产物，把数据和每个上游决策对照。
 4. 如果提供截图，把截图保存或引用到 `artifacts/S8/evidence/` 下，并写一条简短证据说明，列出每张截图、可读数据、评论样本和置信度。除非确实能从截图中读出，不要 OCR 或推断不可见数据。
@@ -72,11 +72,11 @@ artifacts/S7/publish_checklist.md
    - `artifacts/S8/next_iteration_plan.md`
 6. 验证：
    ```bash
-   python3 "$CODEX_SKILLS_ROOT/slbb-video-review/scripts/validate_s8_outputs.py" <run_dir>
+   python3 "skills/slbb-video-review/scripts/validate_s8_outputs.py" <run_dir>
    ```
 7. 停在人工闸门。用户确认下一轮选题方向和具体修改后，再开始下一轮。
 
-如果没有设置 `CODEX_SKILLS_ROOT`，把它替换成本地 skills 根目录。
+从包根目录运行上述命令；如果只拿到了单独 skill 目录，则改用该 skill 目录内的相对脚本路径。
 
 ## 规则
 

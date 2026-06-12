@@ -41,8 +41,8 @@ def main() -> int:
     except Exception as exc:  # noqa: BLE001 - command-line validator should surface the exact issue
         return fail([str(exc)])
 
-    if state.get("workflow_name") != "slbb-video-workflow":
-        errors.append("workflow_name must be slbb-video-workflow")
+    if state.get("workflow_name") != "ai-video-workflow":
+        errors.append("workflow_name must be ai-video-workflow")
 
     if state.get("mode") == "long_drama" and state.get("stages", {}).get("S1", {}).get("status") != "completed":
         for error in long_drama_s1_prerequisite_errors(run_dir, state):
