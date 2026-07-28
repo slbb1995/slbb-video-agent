@@ -14,10 +14,18 @@ ROOT = Path(__file__).resolve().parents[1]
 DISPATCHER = ROOT / "bin" / "slbb-video.py"
 
 
+def utf8_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env["PYTHONUTF8"] = "1"
+    env["PYTHONIOENCODING"] = "utf-8"
+    return env
+
+
 def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [sys.executable, str(DISPATCHER), *args],
         cwd=ROOT,
+        env=utf8_env(),
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -41,6 +49,7 @@ class RepositoryHealthTests(unittest.TestCase):
                 result = subprocess.run(
                     [sys.executable, str(path), "--help"],
                     cwd=ROOT,
+                    env=utf8_env(),
                     text=True,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -100,6 +109,16 @@ class RepositoryHealthTests(unittest.TestCase):
             with self.subTest(path=path.relative_to(ROOT)):
                 text = path.read_text(encoding="utf-8")
                 self.assertNotIn("chmod +x bin/*", text)
+
+    def test_windows_wrappers_enable_utf8(self) -> None:
+        wrappers = sorted(ROOT.glob("bin/*.cmd"))
+        wrappers.extend(sorted(ROOT.glob("skills/*/bin/*.cmd")))
+        self.assertGreater(len(wrappers), 0)
+        for path in wrappers:
+            with self.subTest(path=path.relative_to(ROOT)):
+                text = path.read_text(encoding="utf-8")
+                self.assertIn('set "PYTHONUTF8=1"', text)
+                self.assertIn('set "PYTHONIOENCODING=utf-8"', text)
 
 
 if __name__ == "__main__":

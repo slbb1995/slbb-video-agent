@@ -70,12 +70,12 @@ Windows PowerShell / cmd 用 `.cmd` 脚本：
 如果 Windows 的 `.cmd` 被安全软件拦截，也可以直接用 Python 分发器：
 
 ```powershell
-py -3 .\bin\slbb-video.py init ".\runs\demo" --title "测试短剧"
-py -3 .\bin\slbb-video.py next ".\runs\demo"
-py -3 .\bin\slbb-video.py validate ".\runs\demo"
+py -3 -X utf8 .\bin\slbb-video.py init ".\runs\demo" --title "测试短剧"
+py -3 -X utf8 .\bin\slbb-video.py next ".\runs\demo"
+py -3 -X utf8 .\bin\slbb-video.py validate ".\runs\demo"
 ```
 
-后续 skill 文档里的命令默认从项目根目录运行。Windows 电脑统一把开头的 `python3` 换成 `py -3`。
+后续 skill 文档里的命令默认从项目根目录运行。Windows 电脑统一把开头的 `python3` 换成 `py -3 -X utf8`，避免中文输出受系统默认编码影响。
 
 ### 方式 B：仅在当前项目临时指定 skills 根目录（可选）
 
