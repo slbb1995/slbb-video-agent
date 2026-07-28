@@ -6,7 +6,7 @@ macOS / Linux：
 
 ```bash
 cd AI短剧长剧工作流模版包6.10
-chmod +x bin/*        # 第一次使用：给所有 bin 脚本加可执行权限
+chmod +x bin/slbb-video-{advance,doctor,from-handoff,ingest,init,next,setup,source,validate}  # 只给 macOS/Linux 入口加执行权限
 ./bin/slbb-video-doctor
 ```
 

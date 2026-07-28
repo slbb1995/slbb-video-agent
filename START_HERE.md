@@ -13,7 +13,7 @@
 macOS / Linux：
 
 ```bash
-chmod +x bin/*
+chmod +x bin/slbb-video-{advance,doctor,from-handoff,ingest,init,next,setup,source,validate}
 ./bin/slbb-video-doctor
 ```
 
