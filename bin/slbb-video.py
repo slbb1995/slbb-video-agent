@@ -58,6 +58,11 @@ def main() -> int:
 
     env = os.environ.copy()
     env["CODEX_SKILLS_ROOT"] = str(skills_root)
+    # Windows runners and older Windows consoles may default to cp1252, which
+    # cannot represent the Chinese workflow output. Child commands are the
+    # actual user-facing processes, so force UTF-8 at interpreter startup.
+    env["PYTHONUTF8"] = "1"
+    env["PYTHONIOENCODING"] = "utf-8"
     result = subprocess.run([sys.executable, str(script), *sys.argv[2:]], env=env, check=False)
     return result.returncode
 

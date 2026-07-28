@@ -1,5 +1,8 @@
 # AI Video Agent Workflow
 
+[![CI](https://github.com/slbb1995/slbb-video-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/slbb1995/slbb-video-agent/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/slbb1995/slbb-video-agent/actions/workflows/codeql.yml/badge.svg)](https://github.com/slbb1995/slbb-video-agent/actions/workflows/codeql.yml)
+
 > **如果你是 AI Agent 接管这个包**：先读 [`START_HERE.md`](./START_HERE.md)，里面有完整接管流程。
 > 👤 **如果你是团队成员**：从下面的"运行要求 + 推荐阅读顺序"开始。
 
@@ -22,7 +25,7 @@
 
 - macOS / Linux：Terminal + Python 3.10+（运行 `python3 --version` 确认）。
 - Windows 10/11：PowerShell 或 cmd + Python 3.10+（优先运行 `py -3 --version`，不行再试 `python --version`）。
-- macOS / Linux 第一次使用可运行 `chmod +x bin/*`；Windows 不需要 `chmod`。
+- macOS / Linux 从压缩包解压后如果脚本失去执行权限，只给无后缀入口恢复权限：`chmod +x bin/slbb-video-{advance,doctor,from-handoff,ingest,init,next,setup,source,validate}`。不要修改 `.cmd` 文件权限；Windows 不需要 `chmod`。
 - 任意能读取本地文件并执行命令的 AI Agent 环境，例如 Codex、Claude Code、WorkBuddy 等。
 - S1-S8 状态机脚本是纯 stdlib；长剧本地视频预处理需要 ffmpeg / ffprobe 和包内 `.venv` 的 `faster-whisper`。
 
@@ -67,12 +70,12 @@ Windows PowerShell / cmd 用 `.cmd` 脚本：
 如果 Windows 的 `.cmd` 被安全软件拦截，也可以直接用 Python 分发器：
 
 ```powershell
-py -3 .\bin\slbb-video.py init ".\runs\demo" --title "测试短剧"
-py -3 .\bin\slbb-video.py next ".\runs\demo"
-py -3 .\bin\slbb-video.py validate ".\runs\demo"
+py -3 -X utf8 .\bin\slbb-video.py init ".\runs\demo" --title "测试短剧"
+py -3 -X utf8 .\bin\slbb-video.py next ".\runs\demo"
+py -3 -X utf8 .\bin\slbb-video.py validate ".\runs\demo"
 ```
 
-后续 skill 文档里的命令默认从项目根目录运行。Windows 电脑统一把开头的 `python3` 换成 `py -3`。
+后续 skill 文档里的命令默认从项目根目录运行。Windows 电脑统一把开头的 `python3` 换成 `py -3 -X utf8`，避免中文输出受系统默认编码影响。
 
 ### 方式 B：仅在当前项目临时指定 skills 根目录（可选）
 
@@ -194,3 +197,13 @@ Windows：
 8. `docs/artifact-contract.md`
 9. `docs/human-gates.md`
 10. `skills/slbb-video-orchestrator/references/state_schema.md`
+
+## 仓库验证
+
+本项目使用 GitHub Actions 在 Linux、macOS、Windows 和 Python 3.10—3.14 上运行：
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+CI 会检查全部 Python 文件语法、全部 skill 脚本的命令入口、核心短剧状态机，以及文档和跨平台 wrapper 的权限约束。CodeQL 每周和每次主分支变更时执行安全扫描。

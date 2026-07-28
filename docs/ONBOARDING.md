@@ -10,7 +10,7 @@ macOS / Linux：
 ```bash
 cd /path/to/AI短剧工作流模版包
 ls bin/                  # 应该有 9 个无后缀脚本 + 9 个 Windows .cmd + slbb-video.py
-chmod +x bin/*           # 第一次使用需要赋可执行权限
+chmod +x bin/slbb-video-{advance,doctor,from-handoff,ingest,init,next,setup,source,validate}  # 只修改 macOS/Linux 入口
 ./bin/slbb-video-doctor  # 视频预处理前必须先检查环境
 ls skills/               # 应该有 10 个 slbb-video-* 目录
 python3 --version        # 需要 Python 3.10+
